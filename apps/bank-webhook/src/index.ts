@@ -1,12 +1,37 @@
 import express from "express";
 import { PrismaClient } from "@repo/db"
+import crypto from "crypto";
+
 
 const db = new PrismaClient();
 const app = express();
 
 app.use(express.json());
 
+const SECRET = process.env.BANK_WEBHOOK_SECRET!;
+
+function verifySignature(reqBody: any,signature: string){
+    const computed = crypto
+        .createHmac("sha256",SECRET)
+        .update(JSON.stringify(reqBody))
+        .digest("hex")
+
+    return computed === signature;
+}
+
 app.post("/hdfcWebhook", async (req, res) => {
+
+    const signature = req.headers["x-bank-signature"] as string;
+    console.log("Signature at WebHook:",signature)
+
+    if(!signature){
+        return res.status(401).json({ message: "Missing signature" });
+    }
+
+    if (!verifySignature(req.body, signature)) {
+        return res.status(401).json({ message: "Invalid signature" });
+    }
+
     const paymentInformation: {
         token: string;
         userId: string;
