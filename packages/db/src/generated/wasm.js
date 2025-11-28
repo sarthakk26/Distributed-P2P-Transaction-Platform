@@ -111,6 +111,14 @@ exports.Prisma.OnRampTransactionScalarFieldEnum = {
   userId: 'userId'
 };
 
+exports.Prisma.P2pTransferScalarFieldEnum = {
+  id: 'id',
+  amount: 'amount',
+  timestamp: 'timestamp',
+  fromUserId: 'fromUserId',
+  toUserId: 'toUserId'
+};
+
 exports.Prisma.BalanceScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
@@ -146,6 +154,7 @@ exports.OnRampStatus = exports.$Enums.OnRampStatus = {
 exports.Prisma.ModelName = {
   User: 'User',
   OnRampTransaction: 'OnRampTransaction',
+  p2pTransfer: 'p2pTransfer',
   Balance: 'Balance'
 };
 /**
@@ -187,6 +196,7 @@ const config = {
     "db"
   ],
   "activeProvider": "postgresql",
+  "postinstall": false,
   "inlineDatasources": {
     "db": {
       "url": {
@@ -195,13 +205,13 @@ const config = {
       }
     }
   },
-  "inlineSchema": "generator client {\n  provider = \"prisma-client-js\"\n  output   = \"../src/generated\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"DATABASE_URL\")\n}\n\nmodel User {\n  id                Int                 @id @default(autoincrement())\n  email             String?             @unique\n  name              String?\n  number            String              @unique\n  password          String\n  OnRampTransaction OnRampTransaction[]\n  Balance           Balance[]\n}\n\nmodel OnRampTransaction {\n  id        Int          @id @default(autoincrement())\n  status    OnRampStatus\n  token     String       @unique\n  provider  String\n  amount    Int\n  startTime DateTime\n  userId    Int\n  user      User         @relation(fields: [userId], references: [id])\n}\n\nmodel Balance {\n  id     Int  @id @default(autoincrement())\n  userId Int  @unique\n  amount Int\n  locked Int\n  user   User @relation(fields: [userId], references: [id])\n}\n\nenum AuthType {\n  Google\n  Github\n}\n\nenum OnRampStatus {\n  Success\n  Failure\n  Processing\n}\n",
-  "inlineSchemaHash": "5a1a968d311be91f91845da8ebe43319370c0acbc2a2b67e31182c082a2620f6",
+  "inlineSchema": "generator client {\n  provider = \"prisma-client-js\"\n  output   = \"../src/generated\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"DATABASE_URL\")\n}\n\nmodel User {\n  id                Int                 @id @default(autoincrement())\n  email             String?             @unique\n  name              String?\n  number            String              @unique\n  password          String\n  OnRampTransaction OnRampTransaction[]\n  Balance           Balance?\n  sentTransfers     p2pTransfer[]       @relation(name: \"FromUserRelation\")\n  receivedTransfers p2pTransfer[]       @relation(name: \"ToUserRelation\")\n}\n\nmodel OnRampTransaction {\n  id        Int          @id @default(autoincrement())\n  status    OnRampStatus\n  token     String       @unique\n  provider  String\n  amount    Int\n  startTime DateTime\n  userId    Int\n  user      User         @relation(fields: [userId], references: [id])\n}\n\nmodel p2pTransfer {\n  id         Int      @id @default(autoincrement())\n  amount     Int\n  timestamp  DateTime @default(now())\n  fromUserId Int\n  fromUser   User     @relation(name: \"FromUserRelation\", fields: [fromUserId], references: [id])\n  toUserId   Int\n  toUser     User     @relation(name: \"ToUserRelation\", fields: [toUserId], references: [id])\n}\n\nmodel Balance {\n  id     Int  @id @default(autoincrement())\n  userId Int  @unique\n  amount Int\n  locked Int\n  user   User @relation(fields: [userId], references: [id])\n}\n\nenum AuthType {\n  Google\n  Github\n}\n\nenum OnRampStatus {\n  Success\n  Failure\n  Processing\n}\n",
+  "inlineSchemaHash": "7da878ce58560e7c2eae0ada393b0c9234b7ad5951b635ea7d85db64cb3ea1a3",
   "copyEngine": true
 }
 config.dirname = '/'
 
-config.runtimeDataModel = JSON.parse("{\"models\":{\"User\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"email\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"number\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"password\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"OnRampTransaction\",\"kind\":\"object\",\"type\":\"OnRampTransaction\",\"relationName\":\"OnRampTransactionToUser\"},{\"name\":\"Balance\",\"kind\":\"object\",\"type\":\"Balance\",\"relationName\":\"BalanceToUser\"}],\"dbName\":null},\"OnRampTransaction\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"status\",\"kind\":\"enum\",\"type\":\"OnRampStatus\"},{\"name\":\"token\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"provider\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"amount\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"startTime\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"userId\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"user\",\"kind\":\"object\",\"type\":\"User\",\"relationName\":\"OnRampTransactionToUser\"}],\"dbName\":null},\"Balance\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"userId\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"amount\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"locked\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"user\",\"kind\":\"object\",\"type\":\"User\",\"relationName\":\"BalanceToUser\"}],\"dbName\":null}},\"enums\":{},\"types\":{}}")
+config.runtimeDataModel = JSON.parse("{\"models\":{\"User\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"email\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"number\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"password\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"OnRampTransaction\",\"kind\":\"object\",\"type\":\"OnRampTransaction\",\"relationName\":\"OnRampTransactionToUser\"},{\"name\":\"Balance\",\"kind\":\"object\",\"type\":\"Balance\",\"relationName\":\"BalanceToUser\"},{\"name\":\"sentTransfers\",\"kind\":\"object\",\"type\":\"p2pTransfer\",\"relationName\":\"FromUserRelation\"},{\"name\":\"receivedTransfers\",\"kind\":\"object\",\"type\":\"p2pTransfer\",\"relationName\":\"ToUserRelation\"}],\"dbName\":null},\"OnRampTransaction\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"status\",\"kind\":\"enum\",\"type\":\"OnRampStatus\"},{\"name\":\"token\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"provider\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"amount\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"startTime\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"userId\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"user\",\"kind\":\"object\",\"type\":\"User\",\"relationName\":\"OnRampTransactionToUser\"}],\"dbName\":null},\"p2pTransfer\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"amount\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"timestamp\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"fromUserId\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"fromUser\",\"kind\":\"object\",\"type\":\"User\",\"relationName\":\"FromUserRelation\"},{\"name\":\"toUserId\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"toUser\",\"kind\":\"object\",\"type\":\"User\",\"relationName\":\"ToUserRelation\"}],\"dbName\":null},\"Balance\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"userId\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"amount\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"locked\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"user\",\"kind\":\"object\",\"type\":\"User\",\"relationName\":\"BalanceToUser\"}],\"dbName\":null}},\"enums\":{},\"types\":{}}")
 defineDmmfProperty(exports.Prisma, config.runtimeDataModel)
 config.engineWasm = {
   getRuntime: async () => require('./query_engine_bg.js'),

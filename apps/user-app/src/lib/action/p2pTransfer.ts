@@ -54,5 +54,18 @@ export async function p2pTransfer(to: string, amount: number) {
         amount: { increment: amount },
       },
     });
+
+    // ADD P2P TRANSFER RECORD
+    await tx.p2pTransfer.create({
+      data: {
+        amount,
+        fromUserId: Number(from),
+        toUserId: toUser.id,
+        // timestamp automatically set by @default(now())
+      },
+    });
+
+    return { message: "Transfer successful" };
+
   });
 }
