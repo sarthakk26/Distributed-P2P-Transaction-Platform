@@ -1,7 +1,5 @@
 import { NextResponse } from "next/server";
-import { PrismaClient } from "@repo/db";
-
-const db = new PrismaClient();
+import {prisma} from "@repo/db";
 
 export async function GET(req: Request) {
     try {
@@ -11,7 +9,7 @@ export async function GET(req: Request) {
             return NextResponse.json({ message: "Missing token" }, { status: 400 });
         }
 
-        const trx = await db.onRampTransaction.findUnique({
+        const trx = await prisma.onRampTransaction.findUnique({
             where: { token },
             select: { status: true, amount: true, provider: true, startTime: true }
         });

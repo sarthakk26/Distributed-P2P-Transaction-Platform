@@ -1,9 +1,7 @@
 "use server"
 import { getServerSession } from "next-auth"
 import { authOptions } from "../auth"
-import { PrismaClient } from "@repo/db"
-
-const db = new PrismaClient();
+import {prisma} from "@repo/db"
 
 export async function getOnRampTransactions(txnsCount: number, offset: number) {
     const session = await getServerSession(authOptions);
@@ -11,7 +9,7 @@ export async function getOnRampTransactions(txnsCount: number, offset: number) {
     if (!userId) {
         return [];
     }
-    const txns = await db.onRampTransaction.findMany({
+    const txns = await prisma.onRampTransaction.findMany({
         where: { userId },
         orderBy: { startTime: 'desc' },
         take: txnsCount,
@@ -32,7 +30,7 @@ export async function getP2PTranssactions(txnsCount: number, offset: number) {
     const userId = Number(session?.user?.id);
 
     if (!userId) return [];
-    const sent = await db.p2pTransfer.findMany({
+    const sent = await prisma.p2pTransfer.findMany({
         where: { fromUserId: userId },
         include: { toUser: true },
         orderBy: { timestamp: 'desc' },
@@ -40,7 +38,7 @@ export async function getP2PTranssactions(txnsCount: number, offset: number) {
         skip: offset,
     })
 
-    const received = await db.p2pTransfer.findMany({
+    const received = await prisma.p2pTransfer.findMany({
         where: { toUserId: userId },
         include: { fromUser: true },
         orderBy: { timestamp: 'desc' },
@@ -54,6 +52,7 @@ export async function getP2PTranssactions(txnsCount: number, offset: number) {
         date: t.timestamp,
         status: 'Success',
         user: t.toUser.name || t.toUser.number,
+        userNumber: t.toUser.number,
         type: 'sent' as const
     }))
     const receivedTxns = received.map(t => ({
@@ -62,6 +61,7 @@ export async function getP2PTranssactions(txnsCount: number, offset: number) {
         date: t.timestamp,
         status: 'Success',
         user: t.fromUser.name || t.fromUser.number,
+        userNumber: t.fromUser.number,
         type: 'received' as const
     }));
 

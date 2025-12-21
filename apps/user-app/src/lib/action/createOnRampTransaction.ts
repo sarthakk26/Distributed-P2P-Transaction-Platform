@@ -1,11 +1,10 @@
 "use server"
 
-import { PrismaClient } from "@repo/db";
+import {prisma} from "@repo/db";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../auth";
 import { generateToken } from "../token";
 
-const db = new PrismaClient();
 
 export async function createOnRampTransaction(provider:string, amount:number){
     const session = await getServerSession(authOptions);
@@ -16,7 +15,7 @@ export async function createOnRampTransaction(provider:string, amount:number){
         }
     }
     const token = generateToken();
-    await db.onRampTransaction.create({
+    await prisma.onRampTransaction.create({
         data:{
             provider,
             status: "Processing",

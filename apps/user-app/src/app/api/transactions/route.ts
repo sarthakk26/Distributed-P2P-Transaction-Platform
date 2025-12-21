@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server";
-import { PrismaClient } from "@repo/db";
+import {prisma} from "@repo/db";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 
-const db = new PrismaClient();
+
 
 export async function GET() {
     const session = await getServerSession(authOptions);
@@ -13,15 +13,15 @@ export async function GET() {
         return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
 
-    const sent = await db.p2pTransfer.findMany({
+    const sent = await prisma.p2pTransfer.findMany({
         where: { fromUserId: userId },
         include: { toUser: true },
     });
-    const received = await db.p2pTransfer.findMany({
+    const received = await prisma.p2pTransfer.findMany({
         where: { toUserId: userId },
         include: { fromUser: true },
     });
-    const onRamps = await db.onRampTransaction.findMany({
+    const onRamps = await prisma.onRampTransaction.findMany({
         where: { userId },
     });
 

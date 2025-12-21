@@ -4,30 +4,33 @@ import { getServerSession } from "next-auth";
 import { AppbarClient } from "@/components/AppbarClient";
 
 export default async function Layout({ children }: { children: React.ReactNode }) {
-  const session = await getServerSession(authOptions)
+  const session = await getServerSession(authOptions);
+
   return (
-    <div className="flex h-screen overflow-hidden bg-[#f3f4f6]">
-      {/* Sidebar: Dark Navy Background */}
-      <div className="w-72 bg-[#0f172a] border-r border-slate-800 min-h-screen pt-20 hidden md:block">
-        <div className="flex flex-col gap-2 px-2">
-          <SidebarItem href={"/dashboard"} icon={<HomeIcon />} title="Home" />
-          <SidebarItem href={"/transfer"} icon={<TransferIcon />} title="Transfer" />
-          <SidebarItem href={"/transactions"} icon={<TransactionsIcon />} title="Transaction" />
-          <SidebarItem href={"/p2p"} icon={<P2PTransferIcon />} title="P2P Transfer" />
-        </div>
+    // 1. Root: Flex Column so Appbar stacks on top of the content
+    <div className="flex flex-col h-screen overflow-hidden bg-[#0B0F19]">
+      
+      {/* 2. Appbar: Now sits at the very top, full width */}
+      <div className="w-full bg-black">
+        <AppbarClient user={session?.user} />
       </div>
 
-      {/* Main Content: Light Gray Background, Scrollable */}
-      <div className="flex flex-col flex-1 h-full">
-        {/* The Appbar sits here, next to the sidebar, not above it */}
-        <div className="w-full border-b border-slate-200 bg-white">
-           {/* Pass the user session just like you did in the root layout */}
-           <AppbarClient user={session?.user} />
+      {/* 3. Content Wrapper: Holds Sidebar and Main Content side-by-side */}
+      <div className="flex flex-1 overflow-hidden">
+        
+        {/* Sidebar */}
+        <div className="w-72 bg-[#020617] pt-8 hidden md:block">
+          <div className="flex flex-col gap-2 px-2">
+            <SidebarItem href={"/dashboard"} icon={<HomeIcon />} title="Home" />
+            <SidebarItem href={"/transactions"} icon={<TransactionsIcon />} title="Transaction" />
+          </div>
         </div>
-        {/* The Main Content Area: This part scrolls independently */}
-        <div className="flex-1 overflow-y-auto p-4 bg-[#f3f4f6]">
+
+        {/* Main Content Area */}
+        <div className="flex-1 overflow-y-auto p-4 bg-[#020617]">
           {children}
         </div>
+        
       </div>
     </div>
   );
@@ -41,24 +44,10 @@ function HomeIcon() {
     </svg>
   );
 }
-function TransferIcon() {
-  return (
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6">
-      <path strokeLinecap="round" strokeLinejoin="round" d="M7.5 21 3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5" />
-    </svg>
-  );
-}
 function TransactionsIcon() {
   return (
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6">
       <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-    </svg>
-  );
-}
-function P2PTransferIcon() {
-  return (
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6">
-      <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 19.5 15-15m0 0H8.25m11.25 0v11.25" />
     </svg>
   );
 }

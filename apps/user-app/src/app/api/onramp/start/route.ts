@@ -1,10 +1,9 @@
 import { NextResponse } from "next/server";
-import { PrismaClient } from "@repo/db";
+import {prisma} from "@repo/db";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { generateToken } from "@/lib/token";
 
-const db = new PrismaClient();
 const BANK_URL = process.env.DUMMY_BANK_URL;
 
 export async function POST(req: Request) {
@@ -28,7 +27,7 @@ export async function POST(req: Request) {
         }
         const token = generateToken();
 
-        await db.onRampTransaction.create({
+        await prisma.onRampTransaction.create({
             data: {
                 provider,
                 status: "Processing",

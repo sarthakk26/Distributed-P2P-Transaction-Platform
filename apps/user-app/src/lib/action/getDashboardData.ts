@@ -3,7 +3,7 @@ import { getBalance } from "./getBalance";
 import { getOnRampTransactions, getP2PTranssactions } from "./getTransactions";
 
 export async function getDashboardData() {
-    // ⚡️ Parallel Execution
+    // Parallel Execution
     const [balance, onRampTxns, p2pTxns] = await Promise.all([
         getBalance(),
         getOnRampTransactions(5, 0),
@@ -35,9 +35,10 @@ export async function getDashboardData() {
     p2pTxns
         .filter(t => t.type === 'sent')
         .forEach(t => {
-            if (!contactsMap.has(t.user)) {
-                contactsMap.set(t.user, {
+            if (t.userNumber && !contactsMap.has(t.userNumber)) {
+                contactsMap.set(t.userNumber, {
                     name: t.user,
+                    number: t.userNumber,
                     initials: t.user.slice(0, 2).toUpperCase()
                 })
             }

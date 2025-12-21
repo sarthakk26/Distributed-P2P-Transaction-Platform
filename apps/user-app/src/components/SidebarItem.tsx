@@ -20,8 +20,8 @@ export const SidebarItem = ({
       className={`
         flex items-center cursor-pointer p-3 pl-6 my-1 transition-all duration-200
         ${selected 
-          ? "text-blue-500 border-l-4 border-blue-500 bg-[#1e293b]" // Active: Blue text + Darker BG highlight
-          : "text-slate-400 hover:text-slate-100 hover:bg-[#1e293b]" // Inactive: Gray text + Hover effect
+          ? "text-blue-500 border-l-4 border-blue-500 bg-[#1e293b]" 
+          : "text-slate-400 hover:text-slate-100 hover:bg-[#1e293b]" 
         }
       `}
       onClick={() => {

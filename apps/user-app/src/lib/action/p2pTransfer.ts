@@ -1,9 +1,7 @@
 "use server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
-import { PrismaClient } from "@repo/db";
-
-const db = new PrismaClient();
+import { prisma } from "@repo/db";
 
 export async function p2pTransfer(to: string, amount: number) {
   const session = await getServerSession(authOptions);
@@ -13,7 +11,7 @@ export async function p2pTransfer(to: string, amount: number) {
       message: "Error while sending",
     };
   }
-  const toUser = await db.user.findFirst({
+  const toUser = await prisma.user.findFirst({
     where: {
       number: to,
     },
@@ -25,7 +23,7 @@ export async function p2pTransfer(to: string, amount: number) {
     };
   }
 
-  return await db.$transaction(async (tx) => {
+  return await prisma.$transaction(async (tx) => {
     //Row locking to prevent race condition of concurrent transactions
     await tx.$queryRaw`
       SELECT * FROM "Balance" 

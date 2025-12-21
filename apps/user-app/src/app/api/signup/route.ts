@@ -1,8 +1,7 @@
 import { NextResponse } from "next/server";
 import bcrypt from "bcrypt";
-import { PrismaClient } from "@repo/db";
+import {prisma} from "@repo/db";
 
-const db = new PrismaClient();
 
 export async function POST(req:Request){
     try{
@@ -14,7 +13,7 @@ export async function POST(req:Request){
             },{status:400})
         }
 
-        const existing = await db.user.findUnique({
+        const existing = await prisma.user.findUnique({
             where:{
                 number:phone
             }
@@ -26,7 +25,7 @@ export async function POST(req:Request){
 
         const hashed = await bcrypt.hash(password,10);
 
-        const user = await db.user.create({
+        const user = await prisma.user.create({
             data:{
                 number:phone,
                 password:hashed,
