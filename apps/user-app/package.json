@@ -9,6 +9,7 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@repo/redis": "^0.0.0",
     "@tremor/react": "^3.18.7",
     "bcrypt": "^6.0.0",
     "lucide-react": "^0.562.0",
