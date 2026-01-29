@@ -3,7 +3,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { transferMoney } from "../transfer";
 
-export async function p2pTransfer(to: string, amount: number) {
+export async function p2pTransfer(to: string, amount: number,idempotencyKey: string) {
   const session = await getServerSession(authOptions);
   const from = session?.user?.id;
   
@@ -13,5 +13,5 @@ export async function p2pTransfer(to: string, amount: number) {
     };
   }
   
-  return await transferMoney(Number(from), to, amount);
+  return await transferMoney(Number(from), to, amount,idempotencyKey);
 }

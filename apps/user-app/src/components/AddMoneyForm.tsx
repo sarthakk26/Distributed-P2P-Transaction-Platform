@@ -5,6 +5,7 @@ import { useState, useRef, useEffect } from "react";
 import { PaymentModal } from "./PaymentModal";
 import { toast } from "sonner";
 import { ChevronDown, Check } from "lucide-react";
+import { v4 as uuidv4 } from "uuid";
 
 const SUPPORTED_BANKS = [
   { name: "HDFC Bank", redirectUrl: "https://netbanking.hdfcbank.com" },
@@ -12,7 +13,9 @@ const SUPPORTED_BANKS = [
 ];
 
 export const AddMoneyForm = () => {
-  const [redirectUrl, setRedirectUrl] = useState(SUPPORTED_BANKS[0]?.redirectUrl);
+  const [redirectUrl, setRedirectUrl] = useState(
+    SUPPORTED_BANKS[0]?.redirectUrl,
+  );
   const [provider, setProvider] = useState(SUPPORTED_BANKS[0]?.name || "");
   const [value, setValue] = useState<number>(0);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -20,15 +23,21 @@ export const AddMoneyForm = () => {
 
   async function startPayment() {
     if (!value || value <= 0) {
-        toast.error("Enter a valid amount");
-        return;
+      toast.error("Enter a valid amount");
+      return;
     }
     setIsProcessing(true);
     const toastId = toast.loading("Connecting to bank...");
+
+    const idempotencyKey = uuidv4();
+
     try {
       const res = await fetch("/api/onramp/start", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          "idempotency-key": idempotencyKey,
+        },
         body: JSON.stringify({ provider, amount: value }),
       });
       if (!res.ok) throw new Error();
@@ -51,7 +60,7 @@ export const AddMoneyForm = () => {
             placeholder="Enter amount"
             onChange={(val) => setValue(Number(val))}
           />
-          
+
           <div className="pt-2">
             <CustomSelect
               label="Select Bank"
@@ -70,7 +79,11 @@ export const AddMoneyForm = () => {
         </div>
 
         <div className="flex justify-center pt-4">
-          <Button onClick={startPayment} disabled={isProcessing} className="w-full bg-[#575DFF] hover:bg-[#4a4fc7]">
+          <Button
+            onClick={startPayment}
+            disabled={isProcessing}
+            className="w-full bg-[#575DFF] hover:bg-[#4a4fc7]"
+          >
             {isProcessing ? "Processing..." : "Add Money"}
           </Button>
         </div>
@@ -79,7 +92,10 @@ export const AddMoneyForm = () => {
       {token && (
         <PaymentModal
           token={token}
-          onClose={() => { setToken(null); setIsProcessing(false); }}
+          onClose={() => {
+            setToken(null);
+            setIsProcessing(false);
+          }}
           onComplete={() => window.location.reload()}
         />
       )}
@@ -94,15 +110,15 @@ interface Option {
   value: string;
 }
 
-const CustomSelect = ({ 
-  label, 
-  options, 
-  onSelect, 
-  initialValue 
-}: { 
-  label: string; 
-  options: Option[]; 
-  onSelect: (value: string) => void; 
+const CustomSelect = ({
+  label,
+  options,
+  onSelect,
+  initialValue,
+}: {
+  label: string;
+  options: Option[];
+  onSelect: (value: string) => void;
   initialValue?: string;
 }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -124,15 +140,18 @@ const CustomSelect = ({
       <label className="block text-xs font-medium text-slate-400 mb-2 pl-1">
         {label}
       </label>
-      
+
       {/* Trigger Button */}
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className={`relative w-full bg-[#0F172A] border border-gray-800 text-white font-medium text-sm rounded-lg focus:ring-1 focus:ring-blue-500 focus:border-blue-500 block p-3 text-left flex items-center justify-between transition-all ${isOpen ? 'ring-1 ring-blue-500 border-blue-500' : ''}`}
+        className={`relative w-full bg-[#0F172A] border border-gray-800 text-white font-medium text-sm rounded-lg focus:ring-1 focus:ring-blue-500 focus:border-blue-500 block p-3 text-left flex items-center justify-between transition-all ${isOpen ? "ring-1 ring-blue-500 border-blue-500" : ""}`}
       >
         <span className="truncate">{selected}</span>
-        <ChevronDown size={18} className={`text-slate-400 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
+        <ChevronDown
+          size={18}
+          className={`text-slate-400 transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}
+        />
       </button>
 
       {/* Dropdown Menu */}
@@ -148,14 +167,17 @@ const CustomSelect = ({
                   setIsOpen(false);
                 }}
                 className={`px-4 py-3 text-sm font-medium cursor-pointer flex items-center justify-between group transition-colors
-                  ${selected === option.value 
-                    ? 'bg-[#575DFF] text-white' // SELECTED: Blue Background, White Text
-                    : 'text-slate-300 hover:bg-white/5 hover:text-white' // NORMAL: Light Gray, White on Hover
+                  ${
+                    selected === option.value
+                      ? "bg-[#575DFF] text-white" // SELECTED: Blue Background, White Text
+                      : "text-slate-300 hover:bg-white/5 hover:text-white" // NORMAL: Light Gray, White on Hover
                   }
                 `}
               >
                 {option.value}
-                {selected === option.value && <Check size={16} className="text-white" />}
+                {selected === option.value && (
+                  <Check size={16} className="text-white" />
+                )}
               </li>
             ))}
           </ul>

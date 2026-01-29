@@ -49,6 +49,19 @@ model Balance {
   user   User @relation(fields: [userId], references: [id])
 }
 
+model IdempotencyKey {
+  id             Int      @id @default(autoincrement())
+  userId         Int
+  key            String
+  status         IdempotencyStatus
+  response       Json?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@unique([userId, key])
+  @@index([createdAt])
+}
+
 enum AuthType {
   Google
   Github
@@ -58,4 +71,10 @@ enum OnRampStatus {
   Success
   Failure
   Processing
+}
+
+enum IdempotencyStatus {
+  PROCESSING
+  COMPLETED
+  FAILED
 }

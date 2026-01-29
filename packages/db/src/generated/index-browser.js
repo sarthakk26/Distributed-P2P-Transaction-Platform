@@ -154,9 +154,24 @@ exports.Prisma.BalanceScalarFieldEnum = {
   locked: 'locked'
 };
 
+exports.Prisma.IdempotencyKeyScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  key: 'key',
+  status: 'status',
+  response: 'response',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
+};
+
+exports.Prisma.NullableJsonNullValueInput = {
+  DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull
 };
 
 exports.Prisma.QueryMode = {
@@ -168,17 +183,30 @@ exports.Prisma.NullsOrder = {
   first: 'first',
   last: 'last'
 };
+
+exports.Prisma.JsonNullValueFilter = {
+  DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull,
+  AnyNull: Prisma.AnyNull
+};
 exports.OnRampStatus = exports.$Enums.OnRampStatus = {
   Success: 'Success',
   Failure: 'Failure',
   Processing: 'Processing'
 };
 
+exports.IdempotencyStatus = exports.$Enums.IdempotencyStatus = {
+  PROCESSING: 'PROCESSING',
+  COMPLETED: 'COMPLETED',
+  FAILED: 'FAILED'
+};
+
 exports.Prisma.ModelName = {
   User: 'User',
   OnRampTransaction: 'OnRampTransaction',
   p2pTransfer: 'p2pTransfer',
-  Balance: 'Balance'
+  Balance: 'Balance',
+  IdempotencyKey: 'IdempotencyKey'
 };
 
 /**

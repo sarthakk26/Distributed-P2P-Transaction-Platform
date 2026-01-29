@@ -1,14 +1,21 @@
 "use client";
 import { Button } from "@repo/ui";
 import { TextInput } from "@repo/ui";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { p2pTransfer } from "@/lib/action/p2pTransfer";
 import { toast } from "sonner";
+import { v4 as uuidv4 } from "uuid";
 
-export const SendMoneyForm = ({ prefilledNumber }:{prefilledNumber?:string}) => {
+export const SendMoneyForm = ({
+  prefilledNumber,
+}: {
+  prefilledNumber?: string;
+}) => {
   const [number, setNumber] = useState("");
   const [amount, setAmount] = useState("");
-  
+
+  const idempotencyKeyRef = useRef<string | null>(null);
+
   useEffect(() => {
     if (prefilledNumber) {
       setNumber(prefilledNumber);
@@ -20,9 +27,16 @@ export const SendMoneyForm = ({ prefilledNumber }:{prefilledNumber?:string}) => 
       toast.error("Please fill in all fields");
       return;
     }
+
+    if (!idempotencyKeyRef.current) {
+      idempotencyKeyRef.current = uuidv4();
+    }
+
+    const idempotencyKey = idempotencyKeyRef.current;
     const toastId = toast.loading("Processing...");
+
     try {
-      const result = await p2pTransfer(number, Number(amount));
+      const result = await p2pTransfer(number, Number(amount), idempotencyKey);
       if (result && result.message !== "Transfer successful") {
         toast.dismiss(toastId);
         toast.error(result.message);
@@ -31,6 +45,7 @@ export const SendMoneyForm = ({ prefilledNumber }:{prefilledNumber?:string}) => 
       toast.dismiss(toastId);
       toast.success("Transfer successful!");
       setAmount("");
+      idempotencyKeyRef.current = null;
     } catch (e: any) {
       toast.dismiss(toastId);
       toast.error(e.message || "Transfer failed");
