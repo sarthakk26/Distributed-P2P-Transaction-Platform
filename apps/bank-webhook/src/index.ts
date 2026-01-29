@@ -30,57 +30,61 @@ app.post("/hdfcWebhook", async (req, res) => {
         return res.status(401).json({ message: "Invalid signature" });
     }
 
-    const paymentInformation: {
-        token: string;
-        userId: string;
-        amount: string
-    } = {
-        token: req.body.token,
-        userId: req.body.user_identifier,
-        amount: req.body.amount
+
+    const { token, user_identifier, amount } = req.body;
+
+    if (!token || !user_identifier || !amount) {
+        // ❗ ACK bad payloads to avoid retries
+        return res.status(200).json({ message: "Invalid payload ignored" });
     }
 
     try {
         await prisma.$transaction(async (tx) => {
-            
-            const transaction = await tx.$queryRaw<any[]>`
+
+            // 1️⃣ Lock the on-ramp transaction row
+            const rows = await tx.$queryRaw<any[]>`
             SELECT * FROM "OnRampTransaction" 
-            WHERE "token" = ${paymentInformation.token} 
+            WHERE "token" = ${token} 
             FOR UPDATE
         `;
+            const txn = rows[0];
 
-            const transactionData = transaction[0];
-
-            // 2. Check if this has already been processed (Idempotency)
-            if (!transactionData || transactionData.status !== "Processing") {
+            // 2️⃣ Unknown token → ignore safely
+            if (!txn) {
                 return;
             }
 
-            // 3. Update the Balance (Upsert is fine here since we are inside a lock)
+            // 3️⃣ REPLAY PROTECTION
+            if (txn.status === "Success") return;
+            if (txn.status !== "Processing") return;
+
+            // 4️⃣ Credit balance
             await tx.balance.upsert({
-                where: { userId: Number(paymentInformation.userId) },
+                where: { userId: (txn.userId) },
                 update: {
-                    amount: { increment: Number(paymentInformation.amount) }
+                    amount: { increment: Number(amount) }
                 },
                 create: {
-                    userId: Number(paymentInformation.userId),
-                    amount: Number(paymentInformation.amount),
+                    userId: (txn.userId),
+                    amount: Number(amount),
                     locked: 0
                 }
             });
 
-            // 4. Update the OnRampTransaction status
+            // 5️⃣ Mark transaction as completed
             await tx.onRampTransaction.update({
-                where: { token: paymentInformation.token },
+                where: { token },
                 data: { status: "Success" }
             });
         });
 
-        res.json({ message: "Captured" });
+        // 6️⃣ ALWAYS ACK (even duplicates)
+        return res.status(200).json({ message: "Webhook processed" });
 
     } catch (e) {
         console.error(e);
-        res.status(411).json({ message: "Error while processing Webhook" });
+        // ❗ STILL ACK — never cause retries
+        return res.status(200).json({ message: "Ignored" });
     }
 })
 
