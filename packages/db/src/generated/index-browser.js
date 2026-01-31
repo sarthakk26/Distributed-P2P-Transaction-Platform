@@ -145,7 +145,8 @@ exports.Prisma.P2pTransferScalarFieldEnum = {
   amount: 'amount',
   timestamp: 'timestamp',
   fromUserId: 'fromUserId',
-  toUserId: 'toUserId'
+  toUserId: 'toUserId',
+  status: 'status'
 };
 
 exports.Prisma.BalanceScalarFieldEnum = {
@@ -194,6 +195,13 @@ exports.OnRampStatus = exports.$Enums.OnRampStatus = {
   Success: 'Success',
   Failure: 'Failure',
   Processing: 'Processing'
+};
+
+exports.P2PStatus = exports.$Enums.P2PStatus = {
+  INITIATED: 'INITIATED',
+  LOCKED: 'LOCKED',
+  COMPLETED: 'COMPLETED',
+  FAILED: 'FAILED'
 };
 
 exports.IdempotencyStatus = exports.$Enums.IdempotencyStatus = {

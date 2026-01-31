@@ -24,7 +24,8 @@ export async function transferMoney(
 
   try {
     const result = await prisma.$transaction<P2PResponse>(async (tx) => {
-      
+
+      // 1️⃣ Idempotency check
       const existing = await tx.idempotencyKey.findUnique({
         where: {
           userId_key: {
@@ -51,7 +52,32 @@ export async function transferMoney(
         }
       });
 
-      // 🔒 3. Row locking (your existing logic)
+      // 3️⃣ Create transfer in INITIATED
+      const transfer = await tx.p2pTransfer.create({
+        data: {
+          fromUserId: from,
+          toUserId: toUser.id,
+          amount,
+          status: "INITIATED"
+        }
+      })
+
+      // 4️⃣ Transition INITIATED → LOCKED (guarded)
+      const lockResult = await tx.p2pTransfer.updateMany({
+        where: {
+          id: transfer.id,
+          status: "INITIATED"
+        },
+        data: {
+          status: "LOCKED"
+        }
+      })
+
+      if (lockResult.count !== 1) {
+        throw new Error("INVALID_STATE_TRANSITION");
+      }
+
+      // 5️⃣ Lock sender balance row
       await tx.$queryRaw`
         SELECT * FROM "Balance"
         WHERE "userId" = ${from}
@@ -63,33 +89,53 @@ export async function transferMoney(
       });
 
       if (!fromBalance || fromBalance.amount < amount) {
-        throw new Error("Insufficient funds");
+        // Fail safely
+        await tx.p2pTransfer.update({
+          where: { id: transfer.id },
+          data: { status: "FAILED" }
+        })
+        throw new Error("INSUFFICIENT_FUNDS");
       }
 
-      // 💸 4. Balance updates
+      // 6️⃣ Reserve funds
       await tx.balance.update({
         where: { userId: from },
-        data: { amount: { decrement: amount } }
+        data: {
+          locked: { increment: amount }
+        }
+      })
+
+      // 7️⃣ Move money
+      await tx.balance.update({
+        where: { userId: from },
+        data: {
+          amount: { decrement: amount }
+        }
       });
 
       await tx.balance.update({
         where: { userId: toUser.id },
-        data: { amount: { increment: amount } }
-      });
-
-      // 🧾 5. Transfer record
-      await tx.p2pTransfer.create({
         data: {
-          amount,
-          fromUserId: from,
-          toUserId: toUser.id,
-          timestamp: new Date()
+          amount: { increment: amount }
         }
       });
 
       const response: P2PResponse = { message: "Transfer successful" };
 
-      // 🧠 6. Persist response for replay
+      // 8️⃣ Transition LOCKED → COMPLETED (guarded)
+      const completeResult = await tx.p2pTransfer.updateMany({
+        where: {
+          id: transfer.id,
+          status: "LOCKED"
+        },
+        data: {
+          status: "COMPLETED"
+        }
+      })
+
+      
+
+      // 9️⃣ Mark idempotency completed
       await tx.idempotencyKey.update({
         where: {
           userId_key: {
@@ -112,7 +158,9 @@ export async function transferMoney(
     if (e.message === "REQUEST_IN_PROGRESS") {
       return { message: "Transfer already in progress, try later" };
     }
-
+    if (e.message === "INSUFFICIENT_FUNDS") {
+      return { message: "Insufficient funds" };
+    }
     return { message: "Error while processing transfer" };
   }
 }

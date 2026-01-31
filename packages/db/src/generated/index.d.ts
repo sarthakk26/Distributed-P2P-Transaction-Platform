@@ -60,6 +60,16 @@ export const OnRampStatus: {
 export type OnRampStatus = (typeof OnRampStatus)[keyof typeof OnRampStatus]
 
 
+export const P2PStatus: {
+  INITIATED: 'INITIATED',
+  LOCKED: 'LOCKED',
+  COMPLETED: 'COMPLETED',
+  FAILED: 'FAILED'
+};
+
+export type P2PStatus = (typeof P2PStatus)[keyof typeof P2PStatus]
+
+
 export const IdempotencyStatus: {
   PROCESSING: 'PROCESSING',
   COMPLETED: 'COMPLETED',
@@ -77,6 +87,10 @@ export const AuthType: typeof $Enums.AuthType
 export type OnRampStatus = $Enums.OnRampStatus
 
 export const OnRampStatus: typeof $Enums.OnRampStatus
+
+export type P2PStatus = $Enums.P2PStatus
+
+export const P2PStatus: typeof $Enums.P2PStatus
 
 export type IdempotencyStatus = $Enums.IdempotencyStatus
 
@@ -3674,6 +3688,7 @@ export namespace Prisma {
     timestamp: Date | null
     fromUserId: number | null
     toUserId: number | null
+    status: $Enums.P2PStatus | null
   }
 
   export type P2pTransferMaxAggregateOutputType = {
@@ -3682,6 +3697,7 @@ export namespace Prisma {
     timestamp: Date | null
     fromUserId: number | null
     toUserId: number | null
+    status: $Enums.P2PStatus | null
   }
 
   export type P2pTransferCountAggregateOutputType = {
@@ -3690,6 +3706,7 @@ export namespace Prisma {
     timestamp: number
     fromUserId: number
     toUserId: number
+    status: number
     _all: number
   }
 
@@ -3714,6 +3731,7 @@ export namespace Prisma {
     timestamp?: true
     fromUserId?: true
     toUserId?: true
+    status?: true
   }
 
   export type P2pTransferMaxAggregateInputType = {
@@ -3722,6 +3740,7 @@ export namespace Prisma {
     timestamp?: true
     fromUserId?: true
     toUserId?: true
+    status?: true
   }
 
   export type P2pTransferCountAggregateInputType = {
@@ -3730,6 +3749,7 @@ export namespace Prisma {
     timestamp?: true
     fromUserId?: true
     toUserId?: true
+    status?: true
     _all?: true
   }
 
@@ -3825,6 +3845,7 @@ export namespace Prisma {
     timestamp: Date
     fromUserId: number
     toUserId: number
+    status: $Enums.P2PStatus
     _count: P2pTransferCountAggregateOutputType | null
     _avg: P2pTransferAvgAggregateOutputType | null
     _sum: P2pTransferSumAggregateOutputType | null
@@ -3852,6 +3873,7 @@ export namespace Prisma {
     timestamp?: boolean
     fromUserId?: boolean
     toUserId?: boolean
+    status?: boolean
     fromUser?: boolean | UserDefaultArgs<ExtArgs>
     toUser?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["p2pTransfer"]>
@@ -3862,6 +3884,7 @@ export namespace Prisma {
     timestamp?: boolean
     fromUserId?: boolean
     toUserId?: boolean
+    status?: boolean
     fromUser?: boolean | UserDefaultArgs<ExtArgs>
     toUser?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["p2pTransfer"]>
@@ -3872,6 +3895,7 @@ export namespace Prisma {
     timestamp?: boolean
     fromUserId?: boolean
     toUserId?: boolean
+    status?: boolean
     fromUser?: boolean | UserDefaultArgs<ExtArgs>
     toUser?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["p2pTransfer"]>
@@ -3882,9 +3906,10 @@ export namespace Prisma {
     timestamp?: boolean
     fromUserId?: boolean
     toUserId?: boolean
+    status?: boolean
   }
 
-  export type p2pTransferOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "amount" | "timestamp" | "fromUserId" | "toUserId", ExtArgs["result"]["p2pTransfer"]>
+  export type p2pTransferOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "amount" | "timestamp" | "fromUserId" | "toUserId" | "status", ExtArgs["result"]["p2pTransfer"]>
   export type p2pTransferInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     fromUser?: boolean | UserDefaultArgs<ExtArgs>
     toUser?: boolean | UserDefaultArgs<ExtArgs>
@@ -3910,6 +3935,7 @@ export namespace Prisma {
       timestamp: Date
       fromUserId: number
       toUserId: number
+      status: $Enums.P2PStatus
     }, ExtArgs["result"]["p2pTransfer"]>
     composites: {}
   }
@@ -4340,6 +4366,7 @@ export namespace Prisma {
     readonly timestamp: FieldRef<"p2pTransfer", 'DateTime'>
     readonly fromUserId: FieldRef<"p2pTransfer", 'Int'>
     readonly toUserId: FieldRef<"p2pTransfer", 'Int'>
+    readonly status: FieldRef<"p2pTransfer", 'P2PStatus'>
   }
     
 
@@ -6944,7 +6971,8 @@ export namespace Prisma {
     amount: 'amount',
     timestamp: 'timestamp',
     fromUserId: 'fromUserId',
-    toUserId: 'toUserId'
+    toUserId: 'toUserId',
+    status: 'status'
   };
 
   export type P2pTransferScalarFieldEnum = (typeof P2pTransferScalarFieldEnum)[keyof typeof P2pTransferScalarFieldEnum]
@@ -7072,6 +7100,20 @@ export namespace Prisma {
    * Reference to a field of type 'DateTime[]'
    */
   export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'P2PStatus'
+   */
+  export type EnumP2PStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'P2PStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'P2PStatus[]'
+   */
+  export type ListEnumP2PStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'P2PStatus[]'>
     
 
 
@@ -7267,6 +7309,7 @@ export namespace Prisma {
     timestamp?: DateTimeFilter<"p2pTransfer"> | Date | string
     fromUserId?: IntFilter<"p2pTransfer"> | number
     toUserId?: IntFilter<"p2pTransfer"> | number
+    status?: EnumP2PStatusFilter<"p2pTransfer"> | $Enums.P2PStatus
     fromUser?: XOR<UserScalarRelationFilter, UserWhereInput>
     toUser?: XOR<UserScalarRelationFilter, UserWhereInput>
   }
@@ -7277,6 +7320,7 @@ export namespace Prisma {
     timestamp?: SortOrder
     fromUserId?: SortOrder
     toUserId?: SortOrder
+    status?: SortOrder
     fromUser?: UserOrderByWithRelationInput
     toUser?: UserOrderByWithRelationInput
   }
@@ -7290,6 +7334,7 @@ export namespace Prisma {
     timestamp?: DateTimeFilter<"p2pTransfer"> | Date | string
     fromUserId?: IntFilter<"p2pTransfer"> | number
     toUserId?: IntFilter<"p2pTransfer"> | number
+    status?: EnumP2PStatusFilter<"p2pTransfer"> | $Enums.P2PStatus
     fromUser?: XOR<UserScalarRelationFilter, UserWhereInput>
     toUser?: XOR<UserScalarRelationFilter, UserWhereInput>
   }, "id">
@@ -7300,6 +7345,7 @@ export namespace Prisma {
     timestamp?: SortOrder
     fromUserId?: SortOrder
     toUserId?: SortOrder
+    status?: SortOrder
     _count?: p2pTransferCountOrderByAggregateInput
     _avg?: p2pTransferAvgOrderByAggregateInput
     _max?: p2pTransferMaxOrderByAggregateInput
@@ -7316,6 +7362,7 @@ export namespace Prisma {
     timestamp?: DateTimeWithAggregatesFilter<"p2pTransfer"> | Date | string
     fromUserId?: IntWithAggregatesFilter<"p2pTransfer"> | number
     toUserId?: IntWithAggregatesFilter<"p2pTransfer"> | number
+    status?: EnumP2PStatusWithAggregatesFilter<"p2pTransfer"> | $Enums.P2PStatus
   }
 
   export type BalanceWhereInput = {
@@ -7580,6 +7627,7 @@ export namespace Prisma {
   export type p2pTransferCreateInput = {
     amount: number
     timestamp?: Date | string
+    status?: $Enums.P2PStatus
     fromUser: UserCreateNestedOneWithoutSentTransfersInput
     toUser: UserCreateNestedOneWithoutReceivedTransfersInput
   }
@@ -7590,11 +7638,13 @@ export namespace Prisma {
     timestamp?: Date | string
     fromUserId: number
     toUserId: number
+    status?: $Enums.P2PStatus
   }
 
   export type p2pTransferUpdateInput = {
     amount?: IntFieldUpdateOperationsInput | number
     timestamp?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumP2PStatusFieldUpdateOperationsInput | $Enums.P2PStatus
     fromUser?: UserUpdateOneRequiredWithoutSentTransfersNestedInput
     toUser?: UserUpdateOneRequiredWithoutReceivedTransfersNestedInput
   }
@@ -7605,6 +7655,7 @@ export namespace Prisma {
     timestamp?: DateTimeFieldUpdateOperationsInput | Date | string
     fromUserId?: IntFieldUpdateOperationsInput | number
     toUserId?: IntFieldUpdateOperationsInput | number
+    status?: EnumP2PStatusFieldUpdateOperationsInput | $Enums.P2PStatus
   }
 
   export type p2pTransferCreateManyInput = {
@@ -7613,11 +7664,13 @@ export namespace Prisma {
     timestamp?: Date | string
     fromUserId: number
     toUserId: number
+    status?: $Enums.P2PStatus
   }
 
   export type p2pTransferUpdateManyMutationInput = {
     amount?: IntFieldUpdateOperationsInput | number
     timestamp?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumP2PStatusFieldUpdateOperationsInput | $Enums.P2PStatus
   }
 
   export type p2pTransferUncheckedUpdateManyInput = {
@@ -7626,6 +7679,7 @@ export namespace Prisma {
     timestamp?: DateTimeFieldUpdateOperationsInput | Date | string
     fromUserId?: IntFieldUpdateOperationsInput | number
     toUserId?: IntFieldUpdateOperationsInput | number
+    status?: EnumP2PStatusFieldUpdateOperationsInput | $Enums.P2PStatus
   }
 
   export type BalanceCreateInput = {
@@ -7989,12 +8043,20 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
+  export type EnumP2PStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.P2PStatus | EnumP2PStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.P2PStatus[] | ListEnumP2PStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.P2PStatus[] | ListEnumP2PStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumP2PStatusFilter<$PrismaModel> | $Enums.P2PStatus
+  }
+
   export type p2pTransferCountOrderByAggregateInput = {
     id?: SortOrder
     amount?: SortOrder
     timestamp?: SortOrder
     fromUserId?: SortOrder
     toUserId?: SortOrder
+    status?: SortOrder
   }
 
   export type p2pTransferAvgOrderByAggregateInput = {
@@ -8010,6 +8072,7 @@ export namespace Prisma {
     timestamp?: SortOrder
     fromUserId?: SortOrder
     toUserId?: SortOrder
+    status?: SortOrder
   }
 
   export type p2pTransferMinOrderByAggregateInput = {
@@ -8018,6 +8081,7 @@ export namespace Prisma {
     timestamp?: SortOrder
     fromUserId?: SortOrder
     toUserId?: SortOrder
+    status?: SortOrder
   }
 
   export type p2pTransferSumOrderByAggregateInput = {
@@ -8025,6 +8089,16 @@ export namespace Prisma {
     amount?: SortOrder
     fromUserId?: SortOrder
     toUserId?: SortOrder
+  }
+
+  export type EnumP2PStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.P2PStatus | EnumP2PStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.P2PStatus[] | ListEnumP2PStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.P2PStatus[] | ListEnumP2PStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumP2PStatusWithAggregatesFilter<$PrismaModel> | $Enums.P2PStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumP2PStatusFilter<$PrismaModel>
+    _max?: NestedEnumP2PStatusFilter<$PrismaModel>
   }
 
   export type BalanceCountOrderByAggregateInput = {
@@ -8379,6 +8453,10 @@ export namespace Prisma {
     connect?: UserWhereUniqueInput
   }
 
+  export type EnumP2PStatusFieldUpdateOperationsInput = {
+    set?: $Enums.P2PStatus
+  }
+
   export type UserUpdateOneRequiredWithoutSentTransfersNestedInput = {
     create?: XOR<UserCreateWithoutSentTransfersInput, UserUncheckedCreateWithoutSentTransfersInput>
     connectOrCreate?: UserCreateOrConnectWithoutSentTransfersInput
@@ -8566,6 +8644,23 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
+  export type NestedEnumP2PStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.P2PStatus | EnumP2PStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.P2PStatus[] | ListEnumP2PStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.P2PStatus[] | ListEnumP2PStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumP2PStatusFilter<$PrismaModel> | $Enums.P2PStatus
+  }
+
+  export type NestedEnumP2PStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.P2PStatus | EnumP2PStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.P2PStatus[] | ListEnumP2PStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.P2PStatus[] | ListEnumP2PStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumP2PStatusWithAggregatesFilter<$PrismaModel> | $Enums.P2PStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumP2PStatusFilter<$PrismaModel>
+    _max?: NestedEnumP2PStatusFilter<$PrismaModel>
+  }
+
   export type NestedEnumIdempotencyStatusFilter<$PrismaModel = never> = {
     equals?: $Enums.IdempotencyStatus | EnumIdempotencyStatusFieldRefInput<$PrismaModel>
     in?: $Enums.IdempotencyStatus[] | ListEnumIdempotencyStatusFieldRefInput<$PrismaModel>
@@ -8652,6 +8747,7 @@ export namespace Prisma {
   export type p2pTransferCreateWithoutFromUserInput = {
     amount: number
     timestamp?: Date | string
+    status?: $Enums.P2PStatus
     toUser: UserCreateNestedOneWithoutReceivedTransfersInput
   }
 
@@ -8660,6 +8756,7 @@ export namespace Prisma {
     amount: number
     timestamp?: Date | string
     toUserId: number
+    status?: $Enums.P2PStatus
   }
 
   export type p2pTransferCreateOrConnectWithoutFromUserInput = {
@@ -8675,6 +8772,7 @@ export namespace Prisma {
   export type p2pTransferCreateWithoutToUserInput = {
     amount: number
     timestamp?: Date | string
+    status?: $Enums.P2PStatus
     fromUser: UserCreateNestedOneWithoutSentTransfersInput
   }
 
@@ -8683,6 +8781,7 @@ export namespace Prisma {
     amount: number
     timestamp?: Date | string
     fromUserId: number
+    status?: $Enums.P2PStatus
   }
 
   export type p2pTransferCreateOrConnectWithoutToUserInput = {
@@ -8771,6 +8870,7 @@ export namespace Prisma {
     timestamp?: DateTimeFilter<"p2pTransfer"> | Date | string
     fromUserId?: IntFilter<"p2pTransfer"> | number
     toUserId?: IntFilter<"p2pTransfer"> | number
+    status?: EnumP2PStatusFilter<"p2pTransfer"> | $Enums.P2PStatus
   }
 
   export type p2pTransferUpsertWithWhereUniqueWithoutToUserInput = {
@@ -9051,6 +9151,7 @@ export namespace Prisma {
     amount: number
     timestamp?: Date | string
     toUserId: number
+    status?: $Enums.P2PStatus
   }
 
   export type p2pTransferCreateManyToUserInput = {
@@ -9058,6 +9159,7 @@ export namespace Prisma {
     amount: number
     timestamp?: Date | string
     fromUserId: number
+    status?: $Enums.P2PStatus
   }
 
   export type OnRampTransactionUpdateWithoutUserInput = {
@@ -9089,6 +9191,7 @@ export namespace Prisma {
   export type p2pTransferUpdateWithoutFromUserInput = {
     amount?: IntFieldUpdateOperationsInput | number
     timestamp?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumP2PStatusFieldUpdateOperationsInput | $Enums.P2PStatus
     toUser?: UserUpdateOneRequiredWithoutReceivedTransfersNestedInput
   }
 
@@ -9097,6 +9200,7 @@ export namespace Prisma {
     amount?: IntFieldUpdateOperationsInput | number
     timestamp?: DateTimeFieldUpdateOperationsInput | Date | string
     toUserId?: IntFieldUpdateOperationsInput | number
+    status?: EnumP2PStatusFieldUpdateOperationsInput | $Enums.P2PStatus
   }
 
   export type p2pTransferUncheckedUpdateManyWithoutFromUserInput = {
@@ -9104,11 +9208,13 @@ export namespace Prisma {
     amount?: IntFieldUpdateOperationsInput | number
     timestamp?: DateTimeFieldUpdateOperationsInput | Date | string
     toUserId?: IntFieldUpdateOperationsInput | number
+    status?: EnumP2PStatusFieldUpdateOperationsInput | $Enums.P2PStatus
   }
 
   export type p2pTransferUpdateWithoutToUserInput = {
     amount?: IntFieldUpdateOperationsInput | number
     timestamp?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumP2PStatusFieldUpdateOperationsInput | $Enums.P2PStatus
     fromUser?: UserUpdateOneRequiredWithoutSentTransfersNestedInput
   }
 
@@ -9117,6 +9223,7 @@ export namespace Prisma {
     amount?: IntFieldUpdateOperationsInput | number
     timestamp?: DateTimeFieldUpdateOperationsInput | Date | string
     fromUserId?: IntFieldUpdateOperationsInput | number
+    status?: EnumP2PStatusFieldUpdateOperationsInput | $Enums.P2PStatus
   }
 
   export type p2pTransferUncheckedUpdateManyWithoutToUserInput = {
@@ -9124,6 +9231,7 @@ export namespace Prisma {
     amount?: IntFieldUpdateOperationsInput | number
     timestamp?: DateTimeFieldUpdateOperationsInput | Date | string
     fromUserId?: IntFieldUpdateOperationsInput | number
+    status?: EnumP2PStatusFieldUpdateOperationsInput | $Enums.P2PStatus
   }
 
 
