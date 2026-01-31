@@ -192,9 +192,10 @@ exports.Prisma.JsonNullValueFilter = {
   AnyNull: Prisma.AnyNull
 };
 exports.OnRampStatus = exports.$Enums.OnRampStatus = {
-  Success: 'Success',
-  Failure: 'Failure',
-  Processing: 'Processing'
+  INITIATED: 'INITIATED',
+  PROCESSING: 'PROCESSING',
+  SUCCESS: 'SUCCESS',
+  FAILED: 'FAILED'
 };
 
 exports.P2PStatus = exports.$Enums.P2PStatus = {

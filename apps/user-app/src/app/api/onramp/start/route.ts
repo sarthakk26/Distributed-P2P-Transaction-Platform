@@ -14,13 +14,6 @@ export async function POST(req: Request) {
             return NextResponse.json({ message: "Unauthenticated" }, { status: 401 })
         }
 
-        const idempotencyKey = req.headers.get("idempotency-key");
-        if (!idempotencyKey) {
-            return NextResponse.json(
-                { message: "Idempotency-Key header required" },
-                { status: 400 }
-            );
-        }
 
         const body = await req.json();
         const provider: string = body?.provider;
@@ -35,91 +28,68 @@ export async function POST(req: Request) {
             return NextResponse.json({ message: "Server config error" }, { status: 500 });
         }
 
-        const result = await prisma.$transaction(async (txn) => {
-            // Check for existing idempotency key
-            const existing = await txn.idempotencyKey.findUnique({
-                where: {
-                    userId_key: {
-                        userId: Number(userId),
-                        key: idempotencyKey
-                    }
-                }
-            });
-            
-            if (existing?.status === "COMPLETED") {
-                return existing.response;
+        const token = generateToken();
+
+        // 1️⃣ Create intent in INITIATED
+        const txn = await prisma.onRampTransaction.create({
+            data: {
+                userId:Number(userId),
+                provider,
+                amount,
+                token,
+                status: "INITIATED",
+                startTime: new Date()
             }
-            
-            if (existing?.status === "PROCESSING") {
-                throw new Error("REQUEST_IN_PROGRESS");
-            }
+        })
 
-            // Create idempotency key record
-            await txn.idempotencyKey.create({
-                data: {
-                    userId: Number(userId),
-                    key: idempotencyKey,
-                    status: "PROCESSING"
-                }
-            });
-
-            const token = generateToken();
-
-            // Create onRamp transaction using txn (not prisma)
-            await txn.onRampTransaction.create({
-                data: {
-                    provider,
-                    status: "Processing",
-                    startTime: new Date(),
-                    token,
-                    userId: Number(userId),
-                    amount: amount,
-                },
-            });
-
-            // Mark idempotency key as completed
-            await txn.idempotencyKey.update({
-                where: {
-                    userId_key: {
-                        userId: Number(userId),
-                        key: idempotencyKey
-                    }
-                },
-                data: {
-                    status: "COMPLETED",
-                    response: { token }
-                }
-            });
-            
-            return { token };
-        });
-
-        // Call bank webhook outside transaction
+        // 2️⃣ Call bank (external side-effect)
         try {
             await fetch(BANK_URL, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    token: (result as any).token,
-                    userId: Number(userId),
-                    amount: String(amount),
+                    token,
+                    userId,
+                    amount: String(amount)
                 })
-            });
+            })
+
         } catch (err: any) {
-            console.error("Call to dummy bank failed:", err?.message ?? err);
-        }
-        
-        return NextResponse.json(result, { status: 201 });
-        
-    } catch (err: any) {
-        if (err.message === "REQUEST_IN_PROGRESS") {
+            console.error("Bank call failed", err);
             return NextResponse.json(
-                { message: "Request already in progress" },
+                { message: "Bank unavailable, try again later" },
+                { status: 503 }
+            );
+        }
+        // 3️⃣ Transition INITIATED → PROCESSING (guarded)
+        const updated = await prisma.onRampTransaction.updateMany({
+            where: {
+                id: txn.id,
+                status: "INITIATED"
+            },
+            data: {
+                status: "PROCESSING"
+            }
+        });
+
+        if (updated.count !== 1) {
+            // Extremely rare — race or bug
+            return NextResponse.json(
+                { message: "Invalid transaction state" },
                 { status: 409 }
             );
         }
-        
+
+        return NextResponse.json(
+            { token },
+            { status: 201 }
+        )
+
+    } catch (err) {
         console.error("onramp start error:", err);
-        return NextResponse.json({ message: "Server error" }, { status: 500 });
+        return NextResponse.json(
+            { message: "Server error" },
+            { status: 500 }
+        );
     }
 }

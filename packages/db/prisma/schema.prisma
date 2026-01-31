@@ -23,7 +23,7 @@ model User {
 
 model OnRampTransaction {
   id        Int          @id @default(autoincrement())
-  status    OnRampStatus
+  status    OnRampStatus @default(INITIATED)
   token     String       @unique
   provider  String
   amount    Int
@@ -70,9 +70,10 @@ enum AuthType {
 }
 
 enum OnRampStatus {
-  Success
-  Failure
-  Processing
+  INITIATED
+  PROCESSING
+  SUCCESS
+  FAILED
 }
 
 enum P2PStatus {

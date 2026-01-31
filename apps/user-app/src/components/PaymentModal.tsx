@@ -34,9 +34,9 @@ export function PaymentModal({
 
         setStatus(data.status || "Processing");
 
-        if (data.status === "Success") {
+        if (data.status === "SUCCESS") {
           onComplete("Success");
-        } else if (data.status === "Failure") {
+        } else if (data.status === "FAILED") {
           setError("Payment Failed");
           onComplete("Failure");
         } else {

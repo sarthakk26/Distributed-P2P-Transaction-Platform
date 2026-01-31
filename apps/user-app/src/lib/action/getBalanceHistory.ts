@@ -17,7 +17,7 @@ export async function getBalanceHistory(userId: number) {
         where: { toUserId: userId, timestamp: { gte: sevenDaysAgo } }
     });
     const addedMoney = await prisma.onRampTransaction.findMany({
-        where: { userId: userId, status: "Success", startTime: { gte: sevenDaysAgo } }
+        where: { userId: userId, status:"SUCCESS", startTime: { gte: sevenDaysAgo } }
     });
 
     const allTxns = [

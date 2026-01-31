@@ -52,9 +52,10 @@ export type AuthType = (typeof AuthType)[keyof typeof AuthType]
 
 
 export const OnRampStatus: {
-  Success: 'Success',
-  Failure: 'Failure',
-  Processing: 'Processing'
+  INITIATED: 'INITIATED',
+  PROCESSING: 'PROCESSING',
+  SUCCESS: 'SUCCESS',
+  FAILED: 'FAILED'
 };
 
 export type OnRampStatus = (typeof OnRampStatus)[keyof typeof OnRampStatus]
@@ -7559,7 +7560,7 @@ export namespace Prisma {
   }
 
   export type OnRampTransactionCreateInput = {
-    status: $Enums.OnRampStatus
+    status?: $Enums.OnRampStatus
     token: string
     provider: string
     amount: number
@@ -7569,7 +7570,7 @@ export namespace Prisma {
 
   export type OnRampTransactionUncheckedCreateInput = {
     id?: number
-    status: $Enums.OnRampStatus
+    status?: $Enums.OnRampStatus
     token: string
     provider: string
     amount: number
@@ -7598,7 +7599,7 @@ export namespace Prisma {
 
   export type OnRampTransactionCreateManyInput = {
     id?: number
-    status: $Enums.OnRampStatus
+    status?: $Enums.OnRampStatus
     token: string
     provider: string
     amount: number
@@ -8702,7 +8703,7 @@ export namespace Prisma {
   }
 
   export type OnRampTransactionCreateWithoutUserInput = {
-    status: $Enums.OnRampStatus
+    status?: $Enums.OnRampStatus
     token: string
     provider: string
     amount: number
@@ -8711,7 +8712,7 @@ export namespace Prisma {
 
   export type OnRampTransactionUncheckedCreateWithoutUserInput = {
     id?: number
-    status: $Enums.OnRampStatus
+    status?: $Enums.OnRampStatus
     token: string
     provider: string
     amount: number
@@ -9139,7 +9140,7 @@ export namespace Prisma {
 
   export type OnRampTransactionCreateManyUserInput = {
     id?: number
-    status: $Enums.OnRampStatus
+    status?: $Enums.OnRampStatus
     token: string
     provider: string
     amount: number

@@ -25,7 +25,7 @@ export const getReceivedGraphData = async () => {
   const onRampReceived = await prisma.onRampTransaction.findMany({
     where: {
       userId: userId,
-      status: "Success",
+      status: "SUCCESS",
       startTime: { gte: sevenDaysAgo },
     },
   });

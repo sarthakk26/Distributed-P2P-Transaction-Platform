@@ -23,11 +23,11 @@ app.post("/hdfcWebhook", async (req, res) => {
     console.log("Signature at WebHook:", signature)
 
     if (!signature) {
-        return res.status(401).json({ message: "Missing signature" });
+        return res.status(200).json({ message: "Missing signature Ignored" });
     }
 
     if (!verifySignature(req.body, signature)) {
-        return res.status(401).json({ message: "Invalid signature" });
+        return res.status(200).json({ message: "Invalid signature ignored" });
     }
 
 
@@ -54,9 +54,11 @@ app.post("/hdfcWebhook", async (req, res) => {
                 return;
             }
 
-            // 3️⃣ REPLAY PROTECTION
-            if (txn.status === "Success") return;
-            if (txn.status !== "Processing") return;
+            // 3️⃣ REPLAY / invalid state protection
+            if (txn.status !== "PROCESSING") {
+                // SUCCESS / FAILED / INITIATED → ignore safely
+                return;
+            }
 
             // 4️⃣ Credit balance
             await tx.balance.upsert({
@@ -71,18 +73,26 @@ app.post("/hdfcWebhook", async (req, res) => {
                 }
             });
 
-            // 5️⃣ Mark transaction as completed
-            await tx.onRampTransaction.update({
-                where: { token },
-                data: { status: "Success" }
+            // 5️⃣ PROCESSING → SUCCESS (guarded)
+            const updated = await tx.onRampTransaction.updateMany({
+                where: {
+                    id: txn.id,
+                    status: "PROCESSING"
+                },
+                data: {
+                    status: "SUCCESS"
+                }
             });
+            if (updated.count !== 1) {
+                throw new Error("INVALID_STATE_TRANSITION");
+            }
         });
 
         // 6️⃣ ALWAYS ACK (even duplicates)
         return res.status(200).json({ message: "Webhook processed" });
 
-    } catch (e) {
-        console.error(e);
+    } catch (err) {
+        console.error("Webhook processing error:", err);
         // ❗ STILL ACK — never cause retries
         return res.status(200).json({ message: "Ignored" });
     }

@@ -29,14 +29,12 @@ export const AddMoneyForm = () => {
     setIsProcessing(true);
     const toastId = toast.loading("Connecting to bank...");
 
-    const idempotencyKey = uuidv4();
 
     try {
       const res = await fetch("/api/onramp/start", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
-          "idempotency-key": idempotencyKey,
+          "Content-Type": "application/json"
         },
         body: JSON.stringify({ provider, amount: value }),
       });
