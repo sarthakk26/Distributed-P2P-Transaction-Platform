@@ -39,7 +39,8 @@ export async function getDashboardData() {
                 contactsMap.set(t.userNumber, {
                     name: t.user,
                     number: t.userNumber,
-                    initials: t.user.slice(0, 2).toUpperCase()
+                    initials: t.user.slice(0, 2).toUpperCase(),
+                    avatarId: t.userAvatarId
                 })
             }
         })

@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import bcrypt from "bcrypt";
 import {prisma} from "@repo/db";
 
+const AVATAR_COUNT = 12;
+
 
 export async function POST(req:Request){
     try{
@@ -25,11 +27,14 @@ export async function POST(req:Request){
 
         const hashed = await bcrypt.hash(password,10);
 
+        const avatarId = Math.floor(Math.random() * AVATAR_COUNT)+1;
+
         const user = await prisma.user.create({
             data:{
                 number:phone,
                 password:hashed,
                 name: name,
+                avatarId,
                 Balance:{
                     create:{
                         amount:0,

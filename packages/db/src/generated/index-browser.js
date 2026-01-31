@@ -126,7 +126,8 @@ exports.Prisma.UserScalarFieldEnum = {
   email: 'email',
   name: 'name',
   number: 'number',
-  password: 'password'
+  password: 'password',
+  avatarId: 'avatarId'
 };
 
 exports.Prisma.OnRampTransactionScalarFieldEnum = {

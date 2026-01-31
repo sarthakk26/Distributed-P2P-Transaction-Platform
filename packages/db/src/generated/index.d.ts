@@ -1330,10 +1330,12 @@ export namespace Prisma {
 
   export type UserAvgAggregateOutputType = {
     id: number | null
+    avatarId: number | null
   }
 
   export type UserSumAggregateOutputType = {
     id: number | null
+    avatarId: number | null
   }
 
   export type UserMinAggregateOutputType = {
@@ -1342,6 +1344,7 @@ export namespace Prisma {
     name: string | null
     number: string | null
     password: string | null
+    avatarId: number | null
   }
 
   export type UserMaxAggregateOutputType = {
@@ -1350,6 +1353,7 @@ export namespace Prisma {
     name: string | null
     number: string | null
     password: string | null
+    avatarId: number | null
   }
 
   export type UserCountAggregateOutputType = {
@@ -1358,16 +1362,19 @@ export namespace Prisma {
     name: number
     number: number
     password: number
+    avatarId: number
     _all: number
   }
 
 
   export type UserAvgAggregateInputType = {
     id?: true
+    avatarId?: true
   }
 
   export type UserSumAggregateInputType = {
     id?: true
+    avatarId?: true
   }
 
   export type UserMinAggregateInputType = {
@@ -1376,6 +1383,7 @@ export namespace Prisma {
     name?: true
     number?: true
     password?: true
+    avatarId?: true
   }
 
   export type UserMaxAggregateInputType = {
@@ -1384,6 +1392,7 @@ export namespace Prisma {
     name?: true
     number?: true
     password?: true
+    avatarId?: true
   }
 
   export type UserCountAggregateInputType = {
@@ -1392,6 +1401,7 @@ export namespace Prisma {
     name?: true
     number?: true
     password?: true
+    avatarId?: true
     _all?: true
   }
 
@@ -1487,6 +1497,7 @@ export namespace Prisma {
     name: string | null
     number: string
     password: string
+    avatarId: number
     _count: UserCountAggregateOutputType | null
     _avg: UserAvgAggregateOutputType | null
     _sum: UserSumAggregateOutputType | null
@@ -1514,6 +1525,7 @@ export namespace Prisma {
     name?: boolean
     number?: boolean
     password?: boolean
+    avatarId?: boolean
     OnRampTransaction?: boolean | User$OnRampTransactionArgs<ExtArgs>
     Balance?: boolean | User$BalanceArgs<ExtArgs>
     sentTransfers?: boolean | User$sentTransfersArgs<ExtArgs>
@@ -1527,6 +1539,7 @@ export namespace Prisma {
     name?: boolean
     number?: boolean
     password?: boolean
+    avatarId?: boolean
   }, ExtArgs["result"]["user"]>
 
   export type UserSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -1535,6 +1548,7 @@ export namespace Prisma {
     name?: boolean
     number?: boolean
     password?: boolean
+    avatarId?: boolean
   }, ExtArgs["result"]["user"]>
 
   export type UserSelectScalar = {
@@ -1543,9 +1557,10 @@ export namespace Prisma {
     name?: boolean
     number?: boolean
     password?: boolean
+    avatarId?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "name" | "number" | "password", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "name" | "number" | "password" | "avatarId", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     OnRampTransaction?: boolean | User$OnRampTransactionArgs<ExtArgs>
     Balance?: boolean | User$BalanceArgs<ExtArgs>
@@ -1570,6 +1585,7 @@ export namespace Prisma {
       name: string | null
       number: string
       password: string
+      avatarId: number
     }, ExtArgs["result"]["user"]>
     composites: {}
   }
@@ -2002,6 +2018,7 @@ export namespace Prisma {
     readonly name: FieldRef<"User", 'String'>
     readonly number: FieldRef<"User", 'String'>
     readonly password: FieldRef<"User", 'String'>
+    readonly avatarId: FieldRef<"User", 'Int'>
   }
     
 
@@ -6902,7 +6919,8 @@ export namespace Prisma {
     email: 'email',
     name: 'name',
     number: 'number',
-    password: 'password'
+    password: 'password',
+    avatarId: 'avatarId'
   };
 
   export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -7111,6 +7129,7 @@ export namespace Prisma {
     name?: StringNullableFilter<"User"> | string | null
     number?: StringFilter<"User"> | string
     password?: StringFilter<"User"> | string
+    avatarId?: IntFilter<"User"> | number
     OnRampTransaction?: OnRampTransactionListRelationFilter
     Balance?: XOR<BalanceNullableScalarRelationFilter, BalanceWhereInput> | null
     sentTransfers?: P2pTransferListRelationFilter
@@ -7123,6 +7142,7 @@ export namespace Prisma {
     name?: SortOrderInput | SortOrder
     number?: SortOrder
     password?: SortOrder
+    avatarId?: SortOrder
     OnRampTransaction?: OnRampTransactionOrderByRelationAggregateInput
     Balance?: BalanceOrderByWithRelationInput
     sentTransfers?: p2pTransferOrderByRelationAggregateInput
@@ -7138,6 +7158,7 @@ export namespace Prisma {
     NOT?: UserWhereInput | UserWhereInput[]
     name?: StringNullableFilter<"User"> | string | null
     password?: StringFilter<"User"> | string
+    avatarId?: IntFilter<"User"> | number
     OnRampTransaction?: OnRampTransactionListRelationFilter
     Balance?: XOR<BalanceNullableScalarRelationFilter, BalanceWhereInput> | null
     sentTransfers?: P2pTransferListRelationFilter
@@ -7150,6 +7171,7 @@ export namespace Prisma {
     name?: SortOrderInput | SortOrder
     number?: SortOrder
     password?: SortOrder
+    avatarId?: SortOrder
     _count?: UserCountOrderByAggregateInput
     _avg?: UserAvgOrderByAggregateInput
     _max?: UserMaxOrderByAggregateInput
@@ -7166,6 +7188,7 @@ export namespace Prisma {
     name?: StringNullableWithAggregatesFilter<"User"> | string | null
     number?: StringWithAggregatesFilter<"User"> | string
     password?: StringWithAggregatesFilter<"User"> | string
+    avatarId?: IntWithAggregatesFilter<"User"> | number
   }
 
   export type OnRampTransactionWhereInput = {
@@ -7417,6 +7440,7 @@ export namespace Prisma {
     name?: string | null
     number: string
     password: string
+    avatarId?: number
     OnRampTransaction?: OnRampTransactionCreateNestedManyWithoutUserInput
     Balance?: BalanceCreateNestedOneWithoutUserInput
     sentTransfers?: p2pTransferCreateNestedManyWithoutFromUserInput
@@ -7429,6 +7453,7 @@ export namespace Prisma {
     name?: string | null
     number: string
     password: string
+    avatarId?: number
     OnRampTransaction?: OnRampTransactionUncheckedCreateNestedManyWithoutUserInput
     Balance?: BalanceUncheckedCreateNestedOneWithoutUserInput
     sentTransfers?: p2pTransferUncheckedCreateNestedManyWithoutFromUserInput
@@ -7440,6 +7465,7 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     number?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
+    avatarId?: IntFieldUpdateOperationsInput | number
     OnRampTransaction?: OnRampTransactionUpdateManyWithoutUserNestedInput
     Balance?: BalanceUpdateOneWithoutUserNestedInput
     sentTransfers?: p2pTransferUpdateManyWithoutFromUserNestedInput
@@ -7452,6 +7478,7 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     number?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
+    avatarId?: IntFieldUpdateOperationsInput | number
     OnRampTransaction?: OnRampTransactionUncheckedUpdateManyWithoutUserNestedInput
     Balance?: BalanceUncheckedUpdateOneWithoutUserNestedInput
     sentTransfers?: p2pTransferUncheckedUpdateManyWithoutFromUserNestedInput
@@ -7464,6 +7491,7 @@ export namespace Prisma {
     name?: string | null
     number: string
     password: string
+    avatarId?: number
   }
 
   export type UserUpdateManyMutationInput = {
@@ -7471,6 +7499,7 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     number?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
+    avatarId?: IntFieldUpdateOperationsInput | number
   }
 
   export type UserUncheckedUpdateManyInput = {
@@ -7479,6 +7508,7 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     number?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
+    avatarId?: IntFieldUpdateOperationsInput | number
   }
 
   export type OnRampTransactionCreateInput = {
@@ -7787,10 +7817,12 @@ export namespace Prisma {
     name?: SortOrder
     number?: SortOrder
     password?: SortOrder
+    avatarId?: SortOrder
   }
 
   export type UserAvgOrderByAggregateInput = {
     id?: SortOrder
+    avatarId?: SortOrder
   }
 
   export type UserMaxOrderByAggregateInput = {
@@ -7799,6 +7831,7 @@ export namespace Prisma {
     name?: SortOrder
     number?: SortOrder
     password?: SortOrder
+    avatarId?: SortOrder
   }
 
   export type UserMinOrderByAggregateInput = {
@@ -7807,10 +7840,12 @@ export namespace Prisma {
     name?: SortOrder
     number?: SortOrder
     password?: SortOrder
+    avatarId?: SortOrder
   }
 
   export type UserSumOrderByAggregateInput = {
     id?: SortOrder
+    avatarId?: SortOrder
   }
 
   export type IntWithAggregatesFilter<$PrismaModel = never> = {
@@ -8198,6 +8233,14 @@ export namespace Prisma {
     set?: string
   }
 
+  export type IntFieldUpdateOperationsInput = {
+    set?: number
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
   export type OnRampTransactionUpdateManyWithoutUserNestedInput = {
     create?: XOR<OnRampTransactionCreateWithoutUserInput, OnRampTransactionUncheckedCreateWithoutUserInput> | OnRampTransactionCreateWithoutUserInput[] | OnRampTransactionUncheckedCreateWithoutUserInput[]
     connectOrCreate?: OnRampTransactionCreateOrConnectWithoutUserInput | OnRampTransactionCreateOrConnectWithoutUserInput[]
@@ -8248,14 +8291,6 @@ export namespace Prisma {
     update?: p2pTransferUpdateWithWhereUniqueWithoutToUserInput | p2pTransferUpdateWithWhereUniqueWithoutToUserInput[]
     updateMany?: p2pTransferUpdateManyWithWhereWithoutToUserInput | p2pTransferUpdateManyWithWhereWithoutToUserInput[]
     deleteMany?: p2pTransferScalarWhereInput | p2pTransferScalarWhereInput[]
-  }
-
-  export type IntFieldUpdateOperationsInput = {
-    set?: number
-    increment?: number
-    decrement?: number
-    multiply?: number
-    divide?: number
   }
 
   export type OnRampTransactionUncheckedUpdateManyWithoutUserNestedInput = {
@@ -8759,6 +8794,7 @@ export namespace Prisma {
     name?: string | null
     number: string
     password: string
+    avatarId?: number
     Balance?: BalanceCreateNestedOneWithoutUserInput
     sentTransfers?: p2pTransferCreateNestedManyWithoutFromUserInput
     receivedTransfers?: p2pTransferCreateNestedManyWithoutToUserInput
@@ -8770,6 +8806,7 @@ export namespace Prisma {
     name?: string | null
     number: string
     password: string
+    avatarId?: number
     Balance?: BalanceUncheckedCreateNestedOneWithoutUserInput
     sentTransfers?: p2pTransferUncheckedCreateNestedManyWithoutFromUserInput
     receivedTransfers?: p2pTransferUncheckedCreateNestedManyWithoutToUserInput
@@ -8796,6 +8833,7 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     number?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
+    avatarId?: IntFieldUpdateOperationsInput | number
     Balance?: BalanceUpdateOneWithoutUserNestedInput
     sentTransfers?: p2pTransferUpdateManyWithoutFromUserNestedInput
     receivedTransfers?: p2pTransferUpdateManyWithoutToUserNestedInput
@@ -8807,6 +8845,7 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     number?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
+    avatarId?: IntFieldUpdateOperationsInput | number
     Balance?: BalanceUncheckedUpdateOneWithoutUserNestedInput
     sentTransfers?: p2pTransferUncheckedUpdateManyWithoutFromUserNestedInput
     receivedTransfers?: p2pTransferUncheckedUpdateManyWithoutToUserNestedInput
@@ -8817,6 +8856,7 @@ export namespace Prisma {
     name?: string | null
     number: string
     password: string
+    avatarId?: number
     OnRampTransaction?: OnRampTransactionCreateNestedManyWithoutUserInput
     Balance?: BalanceCreateNestedOneWithoutUserInput
     receivedTransfers?: p2pTransferCreateNestedManyWithoutToUserInput
@@ -8828,6 +8868,7 @@ export namespace Prisma {
     name?: string | null
     number: string
     password: string
+    avatarId?: number
     OnRampTransaction?: OnRampTransactionUncheckedCreateNestedManyWithoutUserInput
     Balance?: BalanceUncheckedCreateNestedOneWithoutUserInput
     receivedTransfers?: p2pTransferUncheckedCreateNestedManyWithoutToUserInput
@@ -8843,6 +8884,7 @@ export namespace Prisma {
     name?: string | null
     number: string
     password: string
+    avatarId?: number
     OnRampTransaction?: OnRampTransactionCreateNestedManyWithoutUserInput
     Balance?: BalanceCreateNestedOneWithoutUserInput
     sentTransfers?: p2pTransferCreateNestedManyWithoutFromUserInput
@@ -8854,6 +8896,7 @@ export namespace Prisma {
     name?: string | null
     number: string
     password: string
+    avatarId?: number
     OnRampTransaction?: OnRampTransactionUncheckedCreateNestedManyWithoutUserInput
     Balance?: BalanceUncheckedCreateNestedOneWithoutUserInput
     sentTransfers?: p2pTransferUncheckedCreateNestedManyWithoutFromUserInput
@@ -8880,6 +8923,7 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     number?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
+    avatarId?: IntFieldUpdateOperationsInput | number
     OnRampTransaction?: OnRampTransactionUpdateManyWithoutUserNestedInput
     Balance?: BalanceUpdateOneWithoutUserNestedInput
     receivedTransfers?: p2pTransferUpdateManyWithoutToUserNestedInput
@@ -8891,6 +8935,7 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     number?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
+    avatarId?: IntFieldUpdateOperationsInput | number
     OnRampTransaction?: OnRampTransactionUncheckedUpdateManyWithoutUserNestedInput
     Balance?: BalanceUncheckedUpdateOneWithoutUserNestedInput
     receivedTransfers?: p2pTransferUncheckedUpdateManyWithoutToUserNestedInput
@@ -8912,6 +8957,7 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     number?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
+    avatarId?: IntFieldUpdateOperationsInput | number
     OnRampTransaction?: OnRampTransactionUpdateManyWithoutUserNestedInput
     Balance?: BalanceUpdateOneWithoutUserNestedInput
     sentTransfers?: p2pTransferUpdateManyWithoutFromUserNestedInput
@@ -8923,6 +8969,7 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     number?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
+    avatarId?: IntFieldUpdateOperationsInput | number
     OnRampTransaction?: OnRampTransactionUncheckedUpdateManyWithoutUserNestedInput
     Balance?: BalanceUncheckedUpdateOneWithoutUserNestedInput
     sentTransfers?: p2pTransferUncheckedUpdateManyWithoutFromUserNestedInput
@@ -8933,6 +8980,7 @@ export namespace Prisma {
     name?: string | null
     number: string
     password: string
+    avatarId?: number
     OnRampTransaction?: OnRampTransactionCreateNestedManyWithoutUserInput
     sentTransfers?: p2pTransferCreateNestedManyWithoutFromUserInput
     receivedTransfers?: p2pTransferCreateNestedManyWithoutToUserInput
@@ -8944,6 +8992,7 @@ export namespace Prisma {
     name?: string | null
     number: string
     password: string
+    avatarId?: number
     OnRampTransaction?: OnRampTransactionUncheckedCreateNestedManyWithoutUserInput
     sentTransfers?: p2pTransferUncheckedCreateNestedManyWithoutFromUserInput
     receivedTransfers?: p2pTransferUncheckedCreateNestedManyWithoutToUserInput
@@ -8970,6 +9019,7 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     number?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
+    avatarId?: IntFieldUpdateOperationsInput | number
     OnRampTransaction?: OnRampTransactionUpdateManyWithoutUserNestedInput
     sentTransfers?: p2pTransferUpdateManyWithoutFromUserNestedInput
     receivedTransfers?: p2pTransferUpdateManyWithoutToUserNestedInput
@@ -8981,6 +9031,7 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     number?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
+    avatarId?: IntFieldUpdateOperationsInput | number
     OnRampTransaction?: OnRampTransactionUncheckedUpdateManyWithoutUserNestedInput
     sentTransfers?: p2pTransferUncheckedUpdateManyWithoutFromUserNestedInput
     receivedTransfers?: p2pTransferUncheckedUpdateManyWithoutToUserNestedInput

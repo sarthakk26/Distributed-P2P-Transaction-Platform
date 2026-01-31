@@ -26,47 +26,68 @@ export async function getOnRampTransactions(txnsCount: number, offset: number) {
 }
 
 export async function getP2PTranssactions(txnsCount: number, offset: number) {
-    const session = await getServerSession(authOptions);
-    const userId = Number(session?.user?.id);
+  const session = await getServerSession(authOptions);
+  const userId = Number(session?.user?.id);
 
-    if (!userId) return [];
-    const sent = await prisma.p2pTransfer.findMany({
-        where: { fromUserId: userId },
-        include: { toUser: true },
-        orderBy: { timestamp: 'desc' },
-        take: txnsCount,
-        skip: offset,
-    })
+  if (!userId) return [];
 
-    const received = await prisma.p2pTransfer.findMany({
-        where: { toUserId: userId },
-        include: { fromUser: true },
-        orderBy: { timestamp: 'desc' },
-        take: txnsCount,
-        skip: offset,
-    })
+  const sent = await prisma.p2pTransfer.findMany({
+    where: { fromUserId: userId },
+    include: {
+      toUser: {
+        select: {
+          name: true,
+          number: true,
+          avatarId: true // 👈 ADD
+        }
+      }
+    },
+    orderBy: { timestamp: "desc" },
+    take: txnsCount,
+    skip: offset
+  });
 
-    const sentTxns = sent.map(t => ({
-        id: t.id,
-        amount: t.amount,
-        date: t.timestamp,
-        status: 'Success',
-        user: t.toUser.name || t.toUser.number,
-        userNumber: t.toUser.number,
-        type: 'sent' as const
-    }))
-    const receivedTxns = received.map(t => ({
-        id: t.id,
-        amount: t.amount,
-        date: t.timestamp,
-        status: 'Success',
-        user: t.fromUser.name || t.fromUser.number,
-        userNumber: t.fromUser.number,
-        type: 'received' as const
-    }));
+  const received = await prisma.p2pTransfer.findMany({
+    where: { toUserId: userId },
+    include: {
+      fromUser: {
+        select: {
+          name: true,
+          number: true,
+          avatarId: true // 👈 ADD
+        }
+      }
+    },
+    orderBy: { timestamp: "desc" },
+    take: txnsCount,
+    skip: offset
+  });
 
-    return [...sentTxns, ...receivedTxns];
+  const sentTxns = sent.map(t => ({
+    id: t.id,
+    amount: t.amount,
+    date: t.timestamp,
+    status: "Success",
+    user: t.toUser.name || t.toUser.number,
+    userNumber: t.toUser.number,
+    userAvatarId: t.toUser.avatarId, // 👈 ADD
+    type: "sent" as const
+  }));
+
+  const receivedTxns = received.map(t => ({
+    id: t.id,
+    amount: t.amount,
+    date: t.timestamp,
+    status: "Success",
+    user: t.fromUser.name || t.fromUser.number,
+    userNumber: t.fromUser.number,
+    userAvatarId: t.fromUser.avatarId, // 👈 ADD
+    type: "received" as const
+  }));
+
+  return [...sentTxns, ...receivedTxns];
 }
+
 
 export async function getAllTransactions(limit: number = 10, offset: number = 0) {
     
