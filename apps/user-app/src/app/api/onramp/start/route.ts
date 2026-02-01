@@ -3,6 +3,7 @@ import { prisma } from "@repo/db";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { generateToken } from "@/lib/token";
+import { logTransition } from "@/monitoring/transitionLogger";
 
 const BANK_URL = process.env.DUMMY_BANK_URL;
 
@@ -33,7 +34,7 @@ export async function POST(req: Request) {
         // 1️⃣ Create intent in INITIATED
         const txn = await prisma.onRampTransaction.create({
             data: {
-                userId:Number(userId),
+                userId: Number(userId),
                 provider,
                 amount,
                 token,
@@ -71,7 +72,6 @@ export async function POST(req: Request) {
                 status: "PROCESSING"
             }
         });
-
         if (updated.count !== 1) {
             // Extremely rare — race or bug
             return NextResponse.json(
@@ -79,6 +79,13 @@ export async function POST(req: Request) {
                 { status: 409 }
             );
         }
+        logTransition({
+            domain: "ONRAMP",
+            entityId: txn.id,
+            from: "INITIATED",
+            to: "PROCESSING",
+            meta: { amount, provider }
+        });
 
         return NextResponse.json(
             { token },

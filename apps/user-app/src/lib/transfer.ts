@@ -1,4 +1,5 @@
 import { prisma } from "@repo/db";
+import { logTransition } from "@/monitoring/transitionLogger";
 
 type P2PResponse = {
   message: string;
@@ -77,6 +78,14 @@ export async function transferMoney(
         throw new Error("INVALID_STATE_TRANSITION");
       }
 
+      logTransition({
+        domain: "P2P",
+        entityId: transfer.id,
+        from: "INITIATED",
+        to: "LOCKED ",
+        meta: { amount, fromUserId: from, toUserId: toUser.id }
+      })
+
       // 5️⃣ Lock sender balance row
       await tx.$queryRaw`
         SELECT * FROM "Balance"
@@ -94,8 +103,17 @@ export async function transferMoney(
           where: { id: transfer.id },
           data: { status: "FAILED" }
         })
+        logTransition({
+          domain: "P2P",
+          entityId: transfer.id,
+          from: "LOCKED",
+          to: "FAILED",
+          meta: { reason: "INSUFFICIENT_FUNDS" }
+        })
         throw new Error("INSUFFICIENT_FUNDS");
       }
+
+
 
       // 6️⃣ Reserve funds
       await tx.balance.update({
@@ -132,8 +150,14 @@ export async function transferMoney(
           status: "COMPLETED"
         }
       })
+      logTransition({
+        domain: "P2P",
+        entityId: transfer.id,
+        from: "LOCKED",
+        to: "COMPLETED",
+        meta: { amount }
+      })
 
-      
 
       // 9️⃣ Mark idempotency completed
       await tx.idempotencyKey.update({

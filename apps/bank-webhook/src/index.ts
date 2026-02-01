@@ -1,6 +1,7 @@
 import express from "express";
 import { prisma } from "@repo/db"
 import crypto from "crypto";
+import { logTransition } from "./monitoring/transitionLogger";
 
 const app = express();
 
@@ -86,6 +87,13 @@ app.post("/hdfcWebhook", async (req, res) => {
             if (updated.count !== 1) {
                 throw new Error("INVALID_STATE_TRANSITION");
             }
+            logTransition({
+                domain: "ONRAMP",
+                entityId: txn.id,
+                from: "PROCESSING",
+                to: "SUCCESS",
+                meta: { amount }
+            });
         });
 
         // 6️⃣ ALWAYS ACK (even duplicates)
