@@ -3,7 +3,7 @@ import { prisma } from "@repo/db";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { generateToken } from "@/lib/token";
-import { logTransition } from "@/monitoring/transitionLogger";
+import { logTransition } from "@/observability/transitionLogger";
 
 const BANK_URL = process.env.DUMMY_BANK_URL;
 

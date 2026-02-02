@@ -1,5 +1,5 @@
 import { prisma } from "@repo/db";
-import { logTransition } from "@/monitoring/transitionLogger";
+import { logTransition } from "@/observability/transitionLogger";
 
 type P2PResponse = {
   message: string;
