@@ -127,6 +127,7 @@ exports.Prisma.UserScalarFieldEnum = {
   name: 'name',
   number: 'number',
   password: 'password',
+  role: 'role',
   avatarId: 'avatarId'
 };
 
@@ -191,6 +192,11 @@ exports.Prisma.JsonNullValueFilter = {
   JsonNull: Prisma.JsonNull,
   AnyNull: Prisma.AnyNull
 };
+exports.Role = exports.$Enums.Role = {
+  USER: 'USER',
+  ADMIN: 'ADMIN'
+};
+
 exports.OnRampStatus = exports.$Enums.OnRampStatus = {
   INITIATED: 'INITIATED',
   PROCESSING: 'PROCESSING',

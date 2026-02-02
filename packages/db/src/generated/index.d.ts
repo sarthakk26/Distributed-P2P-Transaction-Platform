@@ -43,7 +43,15 @@ export type IdempotencyKey = $Result.DefaultSelection<Prisma.$IdempotencyKeyPayl
  * Enums
  */
 export namespace $Enums {
-  export const AuthType: {
+  export const Role: {
+  USER: 'USER',
+  ADMIN: 'ADMIN'
+};
+
+export type Role = (typeof Role)[keyof typeof Role]
+
+
+export const AuthType: {
   Google: 'Google',
   Github: 'Github'
 };
@@ -80,6 +88,10 @@ export const IdempotencyStatus: {
 export type IdempotencyStatus = (typeof IdempotencyStatus)[keyof typeof IdempotencyStatus]
 
 }
+
+export type Role = $Enums.Role
+
+export const Role: typeof $Enums.Role
 
 export type AuthType = $Enums.AuthType
 
@@ -1359,6 +1371,7 @@ export namespace Prisma {
     name: string | null
     number: string | null
     password: string | null
+    role: $Enums.Role | null
     avatarId: number | null
   }
 
@@ -1368,6 +1381,7 @@ export namespace Prisma {
     name: string | null
     number: string | null
     password: string | null
+    role: $Enums.Role | null
     avatarId: number | null
   }
 
@@ -1377,6 +1391,7 @@ export namespace Prisma {
     name: number
     number: number
     password: number
+    role: number
     avatarId: number
     _all: number
   }
@@ -1398,6 +1413,7 @@ export namespace Prisma {
     name?: true
     number?: true
     password?: true
+    role?: true
     avatarId?: true
   }
 
@@ -1407,6 +1423,7 @@ export namespace Prisma {
     name?: true
     number?: true
     password?: true
+    role?: true
     avatarId?: true
   }
 
@@ -1416,6 +1433,7 @@ export namespace Prisma {
     name?: true
     number?: true
     password?: true
+    role?: true
     avatarId?: true
     _all?: true
   }
@@ -1512,6 +1530,7 @@ export namespace Prisma {
     name: string | null
     number: string
     password: string
+    role: $Enums.Role
     avatarId: number
     _count: UserCountAggregateOutputType | null
     _avg: UserAvgAggregateOutputType | null
@@ -1540,6 +1559,7 @@ export namespace Prisma {
     name?: boolean
     number?: boolean
     password?: boolean
+    role?: boolean
     avatarId?: boolean
     OnRampTransaction?: boolean | User$OnRampTransactionArgs<ExtArgs>
     Balance?: boolean | User$BalanceArgs<ExtArgs>
@@ -1554,6 +1574,7 @@ export namespace Prisma {
     name?: boolean
     number?: boolean
     password?: boolean
+    role?: boolean
     avatarId?: boolean
   }, ExtArgs["result"]["user"]>
 
@@ -1563,6 +1584,7 @@ export namespace Prisma {
     name?: boolean
     number?: boolean
     password?: boolean
+    role?: boolean
     avatarId?: boolean
   }, ExtArgs["result"]["user"]>
 
@@ -1572,10 +1594,11 @@ export namespace Prisma {
     name?: boolean
     number?: boolean
     password?: boolean
+    role?: boolean
     avatarId?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "name" | "number" | "password" | "avatarId", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "name" | "number" | "password" | "role" | "avatarId", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     OnRampTransaction?: boolean | User$OnRampTransactionArgs<ExtArgs>
     Balance?: boolean | User$BalanceArgs<ExtArgs>
@@ -1600,6 +1623,7 @@ export namespace Prisma {
       name: string | null
       number: string
       password: string
+      role: $Enums.Role
       avatarId: number
     }, ExtArgs["result"]["user"]>
     composites: {}
@@ -2033,6 +2057,7 @@ export namespace Prisma {
     readonly name: FieldRef<"User", 'String'>
     readonly number: FieldRef<"User", 'String'>
     readonly password: FieldRef<"User", 'String'>
+    readonly role: FieldRef<"User", 'Role'>
     readonly avatarId: FieldRef<"User", 'Int'>
   }
     
@@ -6948,6 +6973,7 @@ export namespace Prisma {
     name: 'name',
     number: 'number',
     password: 'password',
+    role: 'role',
     avatarId: 'avatarId'
   };
 
@@ -7077,6 +7103,20 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'Role'
+   */
+  export type EnumRoleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Role'>
+    
+
+
+  /**
+   * Reference to a field of type 'Role[]'
+   */
+  export type ListEnumRoleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Role[]'>
+    
+
+
+  /**
    * Reference to a field of type 'OnRampStatus'
    */
   export type EnumOnRampStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'OnRampStatus'>
@@ -7172,6 +7212,7 @@ export namespace Prisma {
     name?: StringNullableFilter<"User"> | string | null
     number?: StringFilter<"User"> | string
     password?: StringFilter<"User"> | string
+    role?: EnumRoleFilter<"User"> | $Enums.Role
     avatarId?: IntFilter<"User"> | number
     OnRampTransaction?: OnRampTransactionListRelationFilter
     Balance?: XOR<BalanceNullableScalarRelationFilter, BalanceWhereInput> | null
@@ -7185,6 +7226,7 @@ export namespace Prisma {
     name?: SortOrderInput | SortOrder
     number?: SortOrder
     password?: SortOrder
+    role?: SortOrder
     avatarId?: SortOrder
     OnRampTransaction?: OnRampTransactionOrderByRelationAggregateInput
     Balance?: BalanceOrderByWithRelationInput
@@ -7201,6 +7243,7 @@ export namespace Prisma {
     NOT?: UserWhereInput | UserWhereInput[]
     name?: StringNullableFilter<"User"> | string | null
     password?: StringFilter<"User"> | string
+    role?: EnumRoleFilter<"User"> | $Enums.Role
     avatarId?: IntFilter<"User"> | number
     OnRampTransaction?: OnRampTransactionListRelationFilter
     Balance?: XOR<BalanceNullableScalarRelationFilter, BalanceWhereInput> | null
@@ -7214,6 +7257,7 @@ export namespace Prisma {
     name?: SortOrderInput | SortOrder
     number?: SortOrder
     password?: SortOrder
+    role?: SortOrder
     avatarId?: SortOrder
     _count?: UserCountOrderByAggregateInput
     _avg?: UserAvgOrderByAggregateInput
@@ -7231,6 +7275,7 @@ export namespace Prisma {
     name?: StringNullableWithAggregatesFilter<"User"> | string | null
     number?: StringWithAggregatesFilter<"User"> | string
     password?: StringWithAggregatesFilter<"User"> | string
+    role?: EnumRoleWithAggregatesFilter<"User"> | $Enums.Role
     avatarId?: IntWithAggregatesFilter<"User"> | number
   }
 
@@ -7488,6 +7533,7 @@ export namespace Prisma {
     name?: string | null
     number: string
     password: string
+    role?: $Enums.Role
     avatarId?: number
     OnRampTransaction?: OnRampTransactionCreateNestedManyWithoutUserInput
     Balance?: BalanceCreateNestedOneWithoutUserInput
@@ -7501,6 +7547,7 @@ export namespace Prisma {
     name?: string | null
     number: string
     password: string
+    role?: $Enums.Role
     avatarId?: number
     OnRampTransaction?: OnRampTransactionUncheckedCreateNestedManyWithoutUserInput
     Balance?: BalanceUncheckedCreateNestedOneWithoutUserInput
@@ -7513,6 +7560,7 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     number?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     avatarId?: IntFieldUpdateOperationsInput | number
     OnRampTransaction?: OnRampTransactionUpdateManyWithoutUserNestedInput
     Balance?: BalanceUpdateOneWithoutUserNestedInput
@@ -7526,6 +7574,7 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     number?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     avatarId?: IntFieldUpdateOperationsInput | number
     OnRampTransaction?: OnRampTransactionUncheckedUpdateManyWithoutUserNestedInput
     Balance?: BalanceUncheckedUpdateOneWithoutUserNestedInput
@@ -7539,6 +7588,7 @@ export namespace Prisma {
     name?: string | null
     number: string
     password: string
+    role?: $Enums.Role
     avatarId?: number
   }
 
@@ -7547,6 +7597,7 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     number?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     avatarId?: IntFieldUpdateOperationsInput | number
   }
 
@@ -7556,6 +7607,7 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     number?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     avatarId?: IntFieldUpdateOperationsInput | number
   }
 
@@ -7836,6 +7888,13 @@ export namespace Prisma {
     not?: NestedStringFilter<$PrismaModel> | string
   }
 
+  export type EnumRoleFilter<$PrismaModel = never> = {
+    equals?: $Enums.Role | EnumRoleFieldRefInput<$PrismaModel>
+    in?: $Enums.Role[] | ListEnumRoleFieldRefInput<$PrismaModel>
+    notIn?: $Enums.Role[] | ListEnumRoleFieldRefInput<$PrismaModel>
+    not?: NestedEnumRoleFilter<$PrismaModel> | $Enums.Role
+  }
+
   export type OnRampTransactionListRelationFilter = {
     every?: OnRampTransactionWhereInput
     some?: OnRampTransactionWhereInput
@@ -7872,6 +7931,7 @@ export namespace Prisma {
     name?: SortOrder
     number?: SortOrder
     password?: SortOrder
+    role?: SortOrder
     avatarId?: SortOrder
   }
 
@@ -7886,6 +7946,7 @@ export namespace Prisma {
     name?: SortOrder
     number?: SortOrder
     password?: SortOrder
+    role?: SortOrder
     avatarId?: SortOrder
   }
 
@@ -7895,6 +7956,7 @@ export namespace Prisma {
     name?: SortOrder
     number?: SortOrder
     password?: SortOrder
+    role?: SortOrder
     avatarId?: SortOrder
   }
 
@@ -7953,6 +8015,16 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedStringFilter<$PrismaModel>
     _max?: NestedStringFilter<$PrismaModel>
+  }
+
+  export type EnumRoleWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.Role | EnumRoleFieldRefInput<$PrismaModel>
+    in?: $Enums.Role[] | ListEnumRoleFieldRefInput<$PrismaModel>
+    notIn?: $Enums.Role[] | ListEnumRoleFieldRefInput<$PrismaModel>
+    not?: NestedEnumRoleWithAggregatesFilter<$PrismaModel> | $Enums.Role
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumRoleFilter<$PrismaModel>
+    _max?: NestedEnumRoleFilter<$PrismaModel>
   }
 
   export type EnumOnRampStatusFilter<$PrismaModel = never> = {
@@ -8308,6 +8380,10 @@ export namespace Prisma {
     set?: string
   }
 
+  export type EnumRoleFieldUpdateOperationsInput = {
+    set?: $Enums.Role
+  }
+
   export type IntFieldUpdateOperationsInput = {
     set?: number
     increment?: number
@@ -8531,6 +8607,13 @@ export namespace Prisma {
     not?: NestedStringFilter<$PrismaModel> | string
   }
 
+  export type NestedEnumRoleFilter<$PrismaModel = never> = {
+    equals?: $Enums.Role | EnumRoleFieldRefInput<$PrismaModel>
+    in?: $Enums.Role[] | ListEnumRoleFieldRefInput<$PrismaModel>
+    notIn?: $Enums.Role[] | ListEnumRoleFieldRefInput<$PrismaModel>
+    not?: NestedEnumRoleFilter<$PrismaModel> | $Enums.Role
+  }
+
   export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel>
     in?: number[] | ListIntFieldRefInput<$PrismaModel>
@@ -8601,6 +8684,16 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedStringFilter<$PrismaModel>
     _max?: NestedStringFilter<$PrismaModel>
+  }
+
+  export type NestedEnumRoleWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.Role | EnumRoleFieldRefInput<$PrismaModel>
+    in?: $Enums.Role[] | ListEnumRoleFieldRefInput<$PrismaModel>
+    notIn?: $Enums.Role[] | ListEnumRoleFieldRefInput<$PrismaModel>
+    not?: NestedEnumRoleWithAggregatesFilter<$PrismaModel> | $Enums.Role
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumRoleFilter<$PrismaModel>
+    _max?: NestedEnumRoleFilter<$PrismaModel>
   }
 
   export type NestedEnumOnRampStatusFilter<$PrismaModel = never> = {
@@ -8895,6 +8988,7 @@ export namespace Prisma {
     name?: string | null
     number: string
     password: string
+    role?: $Enums.Role
     avatarId?: number
     Balance?: BalanceCreateNestedOneWithoutUserInput
     sentTransfers?: p2pTransferCreateNestedManyWithoutFromUserInput
@@ -8907,6 +9001,7 @@ export namespace Prisma {
     name?: string | null
     number: string
     password: string
+    role?: $Enums.Role
     avatarId?: number
     Balance?: BalanceUncheckedCreateNestedOneWithoutUserInput
     sentTransfers?: p2pTransferUncheckedCreateNestedManyWithoutFromUserInput
@@ -8934,6 +9029,7 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     number?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     avatarId?: IntFieldUpdateOperationsInput | number
     Balance?: BalanceUpdateOneWithoutUserNestedInput
     sentTransfers?: p2pTransferUpdateManyWithoutFromUserNestedInput
@@ -8946,6 +9042,7 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     number?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     avatarId?: IntFieldUpdateOperationsInput | number
     Balance?: BalanceUncheckedUpdateOneWithoutUserNestedInput
     sentTransfers?: p2pTransferUncheckedUpdateManyWithoutFromUserNestedInput
@@ -8957,6 +9054,7 @@ export namespace Prisma {
     name?: string | null
     number: string
     password: string
+    role?: $Enums.Role
     avatarId?: number
     OnRampTransaction?: OnRampTransactionCreateNestedManyWithoutUserInput
     Balance?: BalanceCreateNestedOneWithoutUserInput
@@ -8969,6 +9067,7 @@ export namespace Prisma {
     name?: string | null
     number: string
     password: string
+    role?: $Enums.Role
     avatarId?: number
     OnRampTransaction?: OnRampTransactionUncheckedCreateNestedManyWithoutUserInput
     Balance?: BalanceUncheckedCreateNestedOneWithoutUserInput
@@ -8985,6 +9084,7 @@ export namespace Prisma {
     name?: string | null
     number: string
     password: string
+    role?: $Enums.Role
     avatarId?: number
     OnRampTransaction?: OnRampTransactionCreateNestedManyWithoutUserInput
     Balance?: BalanceCreateNestedOneWithoutUserInput
@@ -8997,6 +9097,7 @@ export namespace Prisma {
     name?: string | null
     number: string
     password: string
+    role?: $Enums.Role
     avatarId?: number
     OnRampTransaction?: OnRampTransactionUncheckedCreateNestedManyWithoutUserInput
     Balance?: BalanceUncheckedCreateNestedOneWithoutUserInput
@@ -9024,6 +9125,7 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     number?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     avatarId?: IntFieldUpdateOperationsInput | number
     OnRampTransaction?: OnRampTransactionUpdateManyWithoutUserNestedInput
     Balance?: BalanceUpdateOneWithoutUserNestedInput
@@ -9036,6 +9138,7 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     number?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     avatarId?: IntFieldUpdateOperationsInput | number
     OnRampTransaction?: OnRampTransactionUncheckedUpdateManyWithoutUserNestedInput
     Balance?: BalanceUncheckedUpdateOneWithoutUserNestedInput
@@ -9058,6 +9161,7 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     number?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     avatarId?: IntFieldUpdateOperationsInput | number
     OnRampTransaction?: OnRampTransactionUpdateManyWithoutUserNestedInput
     Balance?: BalanceUpdateOneWithoutUserNestedInput
@@ -9070,6 +9174,7 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     number?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     avatarId?: IntFieldUpdateOperationsInput | number
     OnRampTransaction?: OnRampTransactionUncheckedUpdateManyWithoutUserNestedInput
     Balance?: BalanceUncheckedUpdateOneWithoutUserNestedInput
@@ -9081,6 +9186,7 @@ export namespace Prisma {
     name?: string | null
     number: string
     password: string
+    role?: $Enums.Role
     avatarId?: number
     OnRampTransaction?: OnRampTransactionCreateNestedManyWithoutUserInput
     sentTransfers?: p2pTransferCreateNestedManyWithoutFromUserInput
@@ -9093,6 +9199,7 @@ export namespace Prisma {
     name?: string | null
     number: string
     password: string
+    role?: $Enums.Role
     avatarId?: number
     OnRampTransaction?: OnRampTransactionUncheckedCreateNestedManyWithoutUserInput
     sentTransfers?: p2pTransferUncheckedCreateNestedManyWithoutFromUserInput
@@ -9120,6 +9227,7 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     number?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     avatarId?: IntFieldUpdateOperationsInput | number
     OnRampTransaction?: OnRampTransactionUpdateManyWithoutUserNestedInput
     sentTransfers?: p2pTransferUpdateManyWithoutFromUserNestedInput
@@ -9132,6 +9240,7 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     number?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     avatarId?: IntFieldUpdateOperationsInput | number
     OnRampTransaction?: OnRampTransactionUncheckedUpdateManyWithoutUserNestedInput
     sentTransfers?: p2pTransferUncheckedUpdateManyWithoutFromUserNestedInput

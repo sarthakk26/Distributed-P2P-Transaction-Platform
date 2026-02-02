@@ -1,6 +1,8 @@
-import {prisma} from "@repo/db"
+import { prisma } from "@repo/db"
 import CredenttialsProvider from "next-auth/providers/credentials"
 import bcrypt from "bcrypt"
+import type { JWT } from 'next-auth/jwt'
+import type { User } from "next-auth"
 
 export const authOptions = {
     providers: [
@@ -23,7 +25,8 @@ export const authOptions = {
                         return {
                             id: existingUser.id.toString(),
                             name: existingUser.name,
-                            email: existingUser.email
+                            email: existingUser.email,
+                            role: existingUser.role
                         }
                     }
                     return null;
@@ -38,10 +41,11 @@ export const authOptions = {
                     return {
                         id: user.id.toString(),
                         name: user.name,
-                        email: user.number
+                        email: user.number,
+                        role: user.role
                     }
                 }
-                catch(e){
+                catch (e) {
                     console.log(e);
                 }
                 return null
@@ -49,14 +53,27 @@ export const authOptions = {
         })
     ],
     secret: process.env.JWT_SECRET,
-    callbacks:{
-        async session({token,session}:any){
+    callbacks: {
+        async session({ token, session }: any) {
             session.user.id = token.sub;
             session.user.name = token.name;
+            session.user.role = token.role as "USER" | "ADMIN";
             return session
+        },
+        async jwt({
+            token,
+            user
+        }: {
+            token: JWT,
+            user?: User & { role?: "USER" | "ADMIN" }
+        }) {
+            if (user?.role) {
+                token.role = user.role;
+            }
+            return token;
         }
     },
     pages: {
         signIn: "/signin",
     }
- }
+}
