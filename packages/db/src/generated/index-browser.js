@@ -157,6 +157,16 @@ exports.Prisma.BalanceScalarFieldEnum = {
   locked: 'locked'
 };
 
+exports.Prisma.TransitionLogScalarFieldEnum = {
+  id: 'id',
+  domain: 'domain',
+  entityId: 'entityId',
+  fromState: 'fromState',
+  toState: 'toState',
+  meta: 'meta',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.IdempotencyKeyScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
@@ -222,6 +232,7 @@ exports.Prisma.ModelName = {
   OnRampTransaction: 'OnRampTransaction',
   p2pTransfer: 'p2pTransfer',
   Balance: 'Balance',
+  TransitionLog: 'TransitionLog',
   IdempotencyKey: 'IdempotencyKey'
 };
 

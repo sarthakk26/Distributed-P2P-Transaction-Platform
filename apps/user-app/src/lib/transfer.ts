@@ -62,6 +62,14 @@ export async function transferMoney(
           status: "INITIATED"
         }
       })
+      await logTransition(tx, {
+        domain: "P2P",
+        entityId: transfer.id,
+        from: "NONE",
+        to: "INITIATED",
+        meta: { amount, fromUserId: from, toUserId: toUser.id }
+      });
+
 
       // 4️⃣ Transition INITIATED → LOCKED (guarded)
       const lockResult = await tx.p2pTransfer.updateMany({
@@ -78,11 +86,11 @@ export async function transferMoney(
         throw new Error("INVALID_STATE_TRANSITION");
       }
 
-      logTransition({
+      await logTransition(tx, {
         domain: "P2P",
         entityId: transfer.id,
         from: "INITIATED",
-        to: "LOCKED ",
+        to: "LOCKED",
         meta: { amount, fromUserId: from, toUserId: toUser.id }
       })
 
@@ -98,18 +106,33 @@ export async function transferMoney(
       });
 
       if (!fromBalance || fromBalance.amount < amount) {
-        // Fail safely
+        //  Mark transfer as FAILED
         await tx.p2pTransfer.update({
           where: { id: transfer.id },
           data: { status: "FAILED" }
         })
-        logTransition({
+        // Log transition
+        await logTransition(tx, {
           domain: "P2P",
           entityId: transfer.id,
           from: "LOCKED",
           to: "FAILED",
           meta: { reason: "INSUFFICIENT_FUNDS" }
         })
+        // Mark idempotency as FAILED
+        await tx.idempotencyKey.update({
+          where: {
+            userId_key: {
+              userId: from,
+              key: idempotencyKey
+            }
+          },
+          data: {
+            status: "FAILED",
+            response: { message: "Insufficient funds" }
+          }
+        })
+        // Abort transaction
         throw new Error("INSUFFICIENT_FUNDS");
       }
 
@@ -150,7 +173,12 @@ export async function transferMoney(
           status: "COMPLETED"
         }
       })
-      logTransition({
+
+      if (completeResult.count !== 1) {
+        throw new Error("INVALID_STATE_TRANSITION");
+      }
+
+      await logTransition(tx, {
         domain: "P2P",
         entityId: transfer.id,
         from: "LOCKED",

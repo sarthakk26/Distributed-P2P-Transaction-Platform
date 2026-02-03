@@ -1,26 +1,26 @@
-type transitionLog = {
+import { Prisma } from "@repo/db"
+
+
+type transitionLogInput = {
     domain: "P2P" | "ONRAMP";
-    entityId: number | string;
+    entityId: number;
     from: string,
     to: string,
     meta?: Record<string, any>;
 }
 
-export function logTransition({
-    domain,
-    entityId,
-    from,
-    to,
-    meta
-}: transitionLog) {
-    console.log(
-        JSON.stringify({
-            ts: new Date().toISOString,
-            domain,
-            entityId,
-            transition: `${from} -> ${to}`,
-            ...(meta ? { meta } : {})
-        })
-    )
+export async function logTransition(
+    tx:  Prisma.TransactionClient,
+    input: transitionLogInput
+) {
+    await tx.transitionLog.create({
+        data: {
+            domain: input.domain,
+            entityId: input.entityId,
+            fromState: input.from,
+            toState: input.to,
+            meta: input.meta ?? {},
+        }
+    })
 
 }

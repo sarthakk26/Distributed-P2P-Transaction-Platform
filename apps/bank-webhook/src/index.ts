@@ -22,6 +22,7 @@ app.post("/hdfcWebhook", async (req, res) => {
 
     const signature = req.headers["x-bank-signature"] as string;
     console.log("Signature at WebHook:", signature)
+    
 
     if (!signature) {
         return res.status(200).json({ message: "Missing signature Ignored" });
@@ -87,7 +88,7 @@ app.post("/hdfcWebhook", async (req, res) => {
             if (updated.count !== 1) {
                 throw new Error("INVALID_STATE_TRANSITION");
             }
-            logTransition({
+            await logTransition(tx,{
                 domain: "ONRAMP",
                 entityId: txn.id,
                 from: "PROCESSING",

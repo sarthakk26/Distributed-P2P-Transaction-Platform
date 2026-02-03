@@ -34,6 +34,11 @@ export type p2pTransfer = $Result.DefaultSelection<Prisma.$p2pTransferPayload>
  */
 export type Balance = $Result.DefaultSelection<Prisma.$BalancePayload>
 /**
+ * Model TransitionLog
+ * 
+ */
+export type TransitionLog = $Result.DefaultSelection<Prisma.$TransitionLogPayload>
+/**
  * Model IdempotencyKey
  * 
  */
@@ -266,6 +271,16 @@ export class PrismaClient<
     * ```
     */
   get balance(): Prisma.BalanceDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.transitionLog`: Exposes CRUD operations for the **TransitionLog** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more TransitionLogs
+    * const transitionLogs = await prisma.transitionLog.findMany()
+    * ```
+    */
+  get transitionLog(): Prisma.TransitionLogDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.idempotencyKey`: Exposes CRUD operations for the **IdempotencyKey** model.
@@ -721,6 +736,7 @@ export namespace Prisma {
     OnRampTransaction: 'OnRampTransaction',
     p2pTransfer: 'p2pTransfer',
     Balance: 'Balance',
+    TransitionLog: 'TransitionLog',
     IdempotencyKey: 'IdempotencyKey'
   };
 
@@ -740,7 +756,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "onRampTransaction" | "p2pTransfer" | "balance" | "idempotencyKey"
+      modelProps: "user" | "onRampTransaction" | "p2pTransfer" | "balance" | "transitionLog" | "idempotencyKey"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1040,6 +1056,80 @@ export namespace Prisma {
           }
         }
       }
+      TransitionLog: {
+        payload: Prisma.$TransitionLogPayload<ExtArgs>
+        fields: Prisma.TransitionLogFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.TransitionLogFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TransitionLogPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.TransitionLogFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TransitionLogPayload>
+          }
+          findFirst: {
+            args: Prisma.TransitionLogFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TransitionLogPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.TransitionLogFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TransitionLogPayload>
+          }
+          findMany: {
+            args: Prisma.TransitionLogFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TransitionLogPayload>[]
+          }
+          create: {
+            args: Prisma.TransitionLogCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TransitionLogPayload>
+          }
+          createMany: {
+            args: Prisma.TransitionLogCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.TransitionLogCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TransitionLogPayload>[]
+          }
+          delete: {
+            args: Prisma.TransitionLogDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TransitionLogPayload>
+          }
+          update: {
+            args: Prisma.TransitionLogUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TransitionLogPayload>
+          }
+          deleteMany: {
+            args: Prisma.TransitionLogDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.TransitionLogUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.TransitionLogUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TransitionLogPayload>[]
+          }
+          upsert: {
+            args: Prisma.TransitionLogUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TransitionLogPayload>
+          }
+          aggregate: {
+            args: Prisma.TransitionLogAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateTransitionLog>
+          }
+          groupBy: {
+            args: Prisma.TransitionLogGroupByArgs<ExtArgs>
+            result: $Utils.Optional<TransitionLogGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.TransitionLogCountArgs<ExtArgs>
+            result: $Utils.Optional<TransitionLogCountAggregateOutputType> | number
+          }
+        }
+      }
       IdempotencyKey: {
         payload: Prisma.$IdempotencyKeyPayload<ExtArgs>
         fields: Prisma.IdempotencyKeyFieldRefs
@@ -1214,6 +1304,7 @@ export namespace Prisma {
     onRampTransaction?: OnRampTransactionOmit
     p2pTransfer?: p2pTransferOmit
     balance?: BalanceOmit
+    transitionLog?: TransitionLogOmit
     idempotencyKey?: IdempotencyKeyOmit
   }
 
@@ -5899,6 +5990,1061 @@ export namespace Prisma {
 
 
   /**
+   * Model TransitionLog
+   */
+
+  export type AggregateTransitionLog = {
+    _count: TransitionLogCountAggregateOutputType | null
+    _avg: TransitionLogAvgAggregateOutputType | null
+    _sum: TransitionLogSumAggregateOutputType | null
+    _min: TransitionLogMinAggregateOutputType | null
+    _max: TransitionLogMaxAggregateOutputType | null
+  }
+
+  export type TransitionLogAvgAggregateOutputType = {
+    id: number | null
+    entityId: number | null
+  }
+
+  export type TransitionLogSumAggregateOutputType = {
+    id: number | null
+    entityId: number | null
+  }
+
+  export type TransitionLogMinAggregateOutputType = {
+    id: number | null
+    domain: string | null
+    entityId: number | null
+    fromState: string | null
+    toState: string | null
+    createdAt: Date | null
+  }
+
+  export type TransitionLogMaxAggregateOutputType = {
+    id: number | null
+    domain: string | null
+    entityId: number | null
+    fromState: string | null
+    toState: string | null
+    createdAt: Date | null
+  }
+
+  export type TransitionLogCountAggregateOutputType = {
+    id: number
+    domain: number
+    entityId: number
+    fromState: number
+    toState: number
+    meta: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type TransitionLogAvgAggregateInputType = {
+    id?: true
+    entityId?: true
+  }
+
+  export type TransitionLogSumAggregateInputType = {
+    id?: true
+    entityId?: true
+  }
+
+  export type TransitionLogMinAggregateInputType = {
+    id?: true
+    domain?: true
+    entityId?: true
+    fromState?: true
+    toState?: true
+    createdAt?: true
+  }
+
+  export type TransitionLogMaxAggregateInputType = {
+    id?: true
+    domain?: true
+    entityId?: true
+    fromState?: true
+    toState?: true
+    createdAt?: true
+  }
+
+  export type TransitionLogCountAggregateInputType = {
+    id?: true
+    domain?: true
+    entityId?: true
+    fromState?: true
+    toState?: true
+    meta?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type TransitionLogAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which TransitionLog to aggregate.
+     */
+    where?: TransitionLogWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TransitionLogs to fetch.
+     */
+    orderBy?: TransitionLogOrderByWithRelationInput | TransitionLogOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: TransitionLogWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TransitionLogs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TransitionLogs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned TransitionLogs
+    **/
+    _count?: true | TransitionLogCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: TransitionLogAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: TransitionLogSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: TransitionLogMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: TransitionLogMaxAggregateInputType
+  }
+
+  export type GetTransitionLogAggregateType<T extends TransitionLogAggregateArgs> = {
+        [P in keyof T & keyof AggregateTransitionLog]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateTransitionLog[P]>
+      : GetScalarType<T[P], AggregateTransitionLog[P]>
+  }
+
+
+
+
+  export type TransitionLogGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TransitionLogWhereInput
+    orderBy?: TransitionLogOrderByWithAggregationInput | TransitionLogOrderByWithAggregationInput[]
+    by: TransitionLogScalarFieldEnum[] | TransitionLogScalarFieldEnum
+    having?: TransitionLogScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: TransitionLogCountAggregateInputType | true
+    _avg?: TransitionLogAvgAggregateInputType
+    _sum?: TransitionLogSumAggregateInputType
+    _min?: TransitionLogMinAggregateInputType
+    _max?: TransitionLogMaxAggregateInputType
+  }
+
+  export type TransitionLogGroupByOutputType = {
+    id: number
+    domain: string
+    entityId: number
+    fromState: string
+    toState: string
+    meta: JsonValue | null
+    createdAt: Date
+    _count: TransitionLogCountAggregateOutputType | null
+    _avg: TransitionLogAvgAggregateOutputType | null
+    _sum: TransitionLogSumAggregateOutputType | null
+    _min: TransitionLogMinAggregateOutputType | null
+    _max: TransitionLogMaxAggregateOutputType | null
+  }
+
+  type GetTransitionLogGroupByPayload<T extends TransitionLogGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<TransitionLogGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof TransitionLogGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], TransitionLogGroupByOutputType[P]>
+            : GetScalarType<T[P], TransitionLogGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type TransitionLogSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    domain?: boolean
+    entityId?: boolean
+    fromState?: boolean
+    toState?: boolean
+    meta?: boolean
+    createdAt?: boolean
+  }, ExtArgs["result"]["transitionLog"]>
+
+  export type TransitionLogSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    domain?: boolean
+    entityId?: boolean
+    fromState?: boolean
+    toState?: boolean
+    meta?: boolean
+    createdAt?: boolean
+  }, ExtArgs["result"]["transitionLog"]>
+
+  export type TransitionLogSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    domain?: boolean
+    entityId?: boolean
+    fromState?: boolean
+    toState?: boolean
+    meta?: boolean
+    createdAt?: boolean
+  }, ExtArgs["result"]["transitionLog"]>
+
+  export type TransitionLogSelectScalar = {
+    id?: boolean
+    domain?: boolean
+    entityId?: boolean
+    fromState?: boolean
+    toState?: boolean
+    meta?: boolean
+    createdAt?: boolean
+  }
+
+  export type TransitionLogOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "domain" | "entityId" | "fromState" | "toState" | "meta" | "createdAt", ExtArgs["result"]["transitionLog"]>
+
+  export type $TransitionLogPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "TransitionLog"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      domain: string
+      entityId: number
+      fromState: string
+      toState: string
+      meta: Prisma.JsonValue | null
+      createdAt: Date
+    }, ExtArgs["result"]["transitionLog"]>
+    composites: {}
+  }
+
+  type TransitionLogGetPayload<S extends boolean | null | undefined | TransitionLogDefaultArgs> = $Result.GetResult<Prisma.$TransitionLogPayload, S>
+
+  type TransitionLogCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<TransitionLogFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: TransitionLogCountAggregateInputType | true
+    }
+
+  export interface TransitionLogDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['TransitionLog'], meta: { name: 'TransitionLog' } }
+    /**
+     * Find zero or one TransitionLog that matches the filter.
+     * @param {TransitionLogFindUniqueArgs} args - Arguments to find a TransitionLog
+     * @example
+     * // Get one TransitionLog
+     * const transitionLog = await prisma.transitionLog.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends TransitionLogFindUniqueArgs>(args: SelectSubset<T, TransitionLogFindUniqueArgs<ExtArgs>>): Prisma__TransitionLogClient<$Result.GetResult<Prisma.$TransitionLogPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one TransitionLog that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {TransitionLogFindUniqueOrThrowArgs} args - Arguments to find a TransitionLog
+     * @example
+     * // Get one TransitionLog
+     * const transitionLog = await prisma.transitionLog.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends TransitionLogFindUniqueOrThrowArgs>(args: SelectSubset<T, TransitionLogFindUniqueOrThrowArgs<ExtArgs>>): Prisma__TransitionLogClient<$Result.GetResult<Prisma.$TransitionLogPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first TransitionLog that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TransitionLogFindFirstArgs} args - Arguments to find a TransitionLog
+     * @example
+     * // Get one TransitionLog
+     * const transitionLog = await prisma.transitionLog.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends TransitionLogFindFirstArgs>(args?: SelectSubset<T, TransitionLogFindFirstArgs<ExtArgs>>): Prisma__TransitionLogClient<$Result.GetResult<Prisma.$TransitionLogPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first TransitionLog that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TransitionLogFindFirstOrThrowArgs} args - Arguments to find a TransitionLog
+     * @example
+     * // Get one TransitionLog
+     * const transitionLog = await prisma.transitionLog.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends TransitionLogFindFirstOrThrowArgs>(args?: SelectSubset<T, TransitionLogFindFirstOrThrowArgs<ExtArgs>>): Prisma__TransitionLogClient<$Result.GetResult<Prisma.$TransitionLogPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more TransitionLogs that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TransitionLogFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all TransitionLogs
+     * const transitionLogs = await prisma.transitionLog.findMany()
+     * 
+     * // Get first 10 TransitionLogs
+     * const transitionLogs = await prisma.transitionLog.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const transitionLogWithIdOnly = await prisma.transitionLog.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends TransitionLogFindManyArgs>(args?: SelectSubset<T, TransitionLogFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TransitionLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a TransitionLog.
+     * @param {TransitionLogCreateArgs} args - Arguments to create a TransitionLog.
+     * @example
+     * // Create one TransitionLog
+     * const TransitionLog = await prisma.transitionLog.create({
+     *   data: {
+     *     // ... data to create a TransitionLog
+     *   }
+     * })
+     * 
+     */
+    create<T extends TransitionLogCreateArgs>(args: SelectSubset<T, TransitionLogCreateArgs<ExtArgs>>): Prisma__TransitionLogClient<$Result.GetResult<Prisma.$TransitionLogPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many TransitionLogs.
+     * @param {TransitionLogCreateManyArgs} args - Arguments to create many TransitionLogs.
+     * @example
+     * // Create many TransitionLogs
+     * const transitionLog = await prisma.transitionLog.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends TransitionLogCreateManyArgs>(args?: SelectSubset<T, TransitionLogCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many TransitionLogs and returns the data saved in the database.
+     * @param {TransitionLogCreateManyAndReturnArgs} args - Arguments to create many TransitionLogs.
+     * @example
+     * // Create many TransitionLogs
+     * const transitionLog = await prisma.transitionLog.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many TransitionLogs and only return the `id`
+     * const transitionLogWithIdOnly = await prisma.transitionLog.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends TransitionLogCreateManyAndReturnArgs>(args?: SelectSubset<T, TransitionLogCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TransitionLogPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a TransitionLog.
+     * @param {TransitionLogDeleteArgs} args - Arguments to delete one TransitionLog.
+     * @example
+     * // Delete one TransitionLog
+     * const TransitionLog = await prisma.transitionLog.delete({
+     *   where: {
+     *     // ... filter to delete one TransitionLog
+     *   }
+     * })
+     * 
+     */
+    delete<T extends TransitionLogDeleteArgs>(args: SelectSubset<T, TransitionLogDeleteArgs<ExtArgs>>): Prisma__TransitionLogClient<$Result.GetResult<Prisma.$TransitionLogPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one TransitionLog.
+     * @param {TransitionLogUpdateArgs} args - Arguments to update one TransitionLog.
+     * @example
+     * // Update one TransitionLog
+     * const transitionLog = await prisma.transitionLog.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends TransitionLogUpdateArgs>(args: SelectSubset<T, TransitionLogUpdateArgs<ExtArgs>>): Prisma__TransitionLogClient<$Result.GetResult<Prisma.$TransitionLogPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more TransitionLogs.
+     * @param {TransitionLogDeleteManyArgs} args - Arguments to filter TransitionLogs to delete.
+     * @example
+     * // Delete a few TransitionLogs
+     * const { count } = await prisma.transitionLog.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends TransitionLogDeleteManyArgs>(args?: SelectSubset<T, TransitionLogDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more TransitionLogs.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TransitionLogUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many TransitionLogs
+     * const transitionLog = await prisma.transitionLog.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends TransitionLogUpdateManyArgs>(args: SelectSubset<T, TransitionLogUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more TransitionLogs and returns the data updated in the database.
+     * @param {TransitionLogUpdateManyAndReturnArgs} args - Arguments to update many TransitionLogs.
+     * @example
+     * // Update many TransitionLogs
+     * const transitionLog = await prisma.transitionLog.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more TransitionLogs and only return the `id`
+     * const transitionLogWithIdOnly = await prisma.transitionLog.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends TransitionLogUpdateManyAndReturnArgs>(args: SelectSubset<T, TransitionLogUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TransitionLogPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one TransitionLog.
+     * @param {TransitionLogUpsertArgs} args - Arguments to update or create a TransitionLog.
+     * @example
+     * // Update or create a TransitionLog
+     * const transitionLog = await prisma.transitionLog.upsert({
+     *   create: {
+     *     // ... data to create a TransitionLog
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the TransitionLog we want to update
+     *   }
+     * })
+     */
+    upsert<T extends TransitionLogUpsertArgs>(args: SelectSubset<T, TransitionLogUpsertArgs<ExtArgs>>): Prisma__TransitionLogClient<$Result.GetResult<Prisma.$TransitionLogPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of TransitionLogs.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TransitionLogCountArgs} args - Arguments to filter TransitionLogs to count.
+     * @example
+     * // Count the number of TransitionLogs
+     * const count = await prisma.transitionLog.count({
+     *   where: {
+     *     // ... the filter for the TransitionLogs we want to count
+     *   }
+     * })
+    **/
+    count<T extends TransitionLogCountArgs>(
+      args?: Subset<T, TransitionLogCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], TransitionLogCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a TransitionLog.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TransitionLogAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends TransitionLogAggregateArgs>(args: Subset<T, TransitionLogAggregateArgs>): Prisma.PrismaPromise<GetTransitionLogAggregateType<T>>
+
+    /**
+     * Group by TransitionLog.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TransitionLogGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends TransitionLogGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: TransitionLogGroupByArgs['orderBy'] }
+        : { orderBy?: TransitionLogGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, TransitionLogGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetTransitionLogGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the TransitionLog model
+   */
+  readonly fields: TransitionLogFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for TransitionLog.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__TransitionLogClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the TransitionLog model
+   */
+  interface TransitionLogFieldRefs {
+    readonly id: FieldRef<"TransitionLog", 'Int'>
+    readonly domain: FieldRef<"TransitionLog", 'String'>
+    readonly entityId: FieldRef<"TransitionLog", 'Int'>
+    readonly fromState: FieldRef<"TransitionLog", 'String'>
+    readonly toState: FieldRef<"TransitionLog", 'String'>
+    readonly meta: FieldRef<"TransitionLog", 'Json'>
+    readonly createdAt: FieldRef<"TransitionLog", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * TransitionLog findUnique
+   */
+  export type TransitionLogFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TransitionLog
+     */
+    select?: TransitionLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TransitionLog
+     */
+    omit?: TransitionLogOmit<ExtArgs> | null
+    /**
+     * Filter, which TransitionLog to fetch.
+     */
+    where: TransitionLogWhereUniqueInput
+  }
+
+  /**
+   * TransitionLog findUniqueOrThrow
+   */
+  export type TransitionLogFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TransitionLog
+     */
+    select?: TransitionLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TransitionLog
+     */
+    omit?: TransitionLogOmit<ExtArgs> | null
+    /**
+     * Filter, which TransitionLog to fetch.
+     */
+    where: TransitionLogWhereUniqueInput
+  }
+
+  /**
+   * TransitionLog findFirst
+   */
+  export type TransitionLogFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TransitionLog
+     */
+    select?: TransitionLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TransitionLog
+     */
+    omit?: TransitionLogOmit<ExtArgs> | null
+    /**
+     * Filter, which TransitionLog to fetch.
+     */
+    where?: TransitionLogWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TransitionLogs to fetch.
+     */
+    orderBy?: TransitionLogOrderByWithRelationInput | TransitionLogOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for TransitionLogs.
+     */
+    cursor?: TransitionLogWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TransitionLogs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TransitionLogs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of TransitionLogs.
+     */
+    distinct?: TransitionLogScalarFieldEnum | TransitionLogScalarFieldEnum[]
+  }
+
+  /**
+   * TransitionLog findFirstOrThrow
+   */
+  export type TransitionLogFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TransitionLog
+     */
+    select?: TransitionLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TransitionLog
+     */
+    omit?: TransitionLogOmit<ExtArgs> | null
+    /**
+     * Filter, which TransitionLog to fetch.
+     */
+    where?: TransitionLogWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TransitionLogs to fetch.
+     */
+    orderBy?: TransitionLogOrderByWithRelationInput | TransitionLogOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for TransitionLogs.
+     */
+    cursor?: TransitionLogWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TransitionLogs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TransitionLogs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of TransitionLogs.
+     */
+    distinct?: TransitionLogScalarFieldEnum | TransitionLogScalarFieldEnum[]
+  }
+
+  /**
+   * TransitionLog findMany
+   */
+  export type TransitionLogFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TransitionLog
+     */
+    select?: TransitionLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TransitionLog
+     */
+    omit?: TransitionLogOmit<ExtArgs> | null
+    /**
+     * Filter, which TransitionLogs to fetch.
+     */
+    where?: TransitionLogWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TransitionLogs to fetch.
+     */
+    orderBy?: TransitionLogOrderByWithRelationInput | TransitionLogOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing TransitionLogs.
+     */
+    cursor?: TransitionLogWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TransitionLogs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TransitionLogs.
+     */
+    skip?: number
+    distinct?: TransitionLogScalarFieldEnum | TransitionLogScalarFieldEnum[]
+  }
+
+  /**
+   * TransitionLog create
+   */
+  export type TransitionLogCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TransitionLog
+     */
+    select?: TransitionLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TransitionLog
+     */
+    omit?: TransitionLogOmit<ExtArgs> | null
+    /**
+     * The data needed to create a TransitionLog.
+     */
+    data: XOR<TransitionLogCreateInput, TransitionLogUncheckedCreateInput>
+  }
+
+  /**
+   * TransitionLog createMany
+   */
+  export type TransitionLogCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many TransitionLogs.
+     */
+    data: TransitionLogCreateManyInput | TransitionLogCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * TransitionLog createManyAndReturn
+   */
+  export type TransitionLogCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TransitionLog
+     */
+    select?: TransitionLogSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the TransitionLog
+     */
+    omit?: TransitionLogOmit<ExtArgs> | null
+    /**
+     * The data used to create many TransitionLogs.
+     */
+    data: TransitionLogCreateManyInput | TransitionLogCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * TransitionLog update
+   */
+  export type TransitionLogUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TransitionLog
+     */
+    select?: TransitionLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TransitionLog
+     */
+    omit?: TransitionLogOmit<ExtArgs> | null
+    /**
+     * The data needed to update a TransitionLog.
+     */
+    data: XOR<TransitionLogUpdateInput, TransitionLogUncheckedUpdateInput>
+    /**
+     * Choose, which TransitionLog to update.
+     */
+    where: TransitionLogWhereUniqueInput
+  }
+
+  /**
+   * TransitionLog updateMany
+   */
+  export type TransitionLogUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update TransitionLogs.
+     */
+    data: XOR<TransitionLogUpdateManyMutationInput, TransitionLogUncheckedUpdateManyInput>
+    /**
+     * Filter which TransitionLogs to update
+     */
+    where?: TransitionLogWhereInput
+    /**
+     * Limit how many TransitionLogs to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * TransitionLog updateManyAndReturn
+   */
+  export type TransitionLogUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TransitionLog
+     */
+    select?: TransitionLogSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the TransitionLog
+     */
+    omit?: TransitionLogOmit<ExtArgs> | null
+    /**
+     * The data used to update TransitionLogs.
+     */
+    data: XOR<TransitionLogUpdateManyMutationInput, TransitionLogUncheckedUpdateManyInput>
+    /**
+     * Filter which TransitionLogs to update
+     */
+    where?: TransitionLogWhereInput
+    /**
+     * Limit how many TransitionLogs to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * TransitionLog upsert
+   */
+  export type TransitionLogUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TransitionLog
+     */
+    select?: TransitionLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TransitionLog
+     */
+    omit?: TransitionLogOmit<ExtArgs> | null
+    /**
+     * The filter to search for the TransitionLog to update in case it exists.
+     */
+    where: TransitionLogWhereUniqueInput
+    /**
+     * In case the TransitionLog found by the `where` argument doesn't exist, create a new TransitionLog with this data.
+     */
+    create: XOR<TransitionLogCreateInput, TransitionLogUncheckedCreateInput>
+    /**
+     * In case the TransitionLog was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<TransitionLogUpdateInput, TransitionLogUncheckedUpdateInput>
+  }
+
+  /**
+   * TransitionLog delete
+   */
+  export type TransitionLogDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TransitionLog
+     */
+    select?: TransitionLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TransitionLog
+     */
+    omit?: TransitionLogOmit<ExtArgs> | null
+    /**
+     * Filter which TransitionLog to delete.
+     */
+    where: TransitionLogWhereUniqueInput
+  }
+
+  /**
+   * TransitionLog deleteMany
+   */
+  export type TransitionLogDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which TransitionLogs to delete
+     */
+    where?: TransitionLogWhereInput
+    /**
+     * Limit how many TransitionLogs to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * TransitionLog without action
+   */
+  export type TransitionLogDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TransitionLog
+     */
+    select?: TransitionLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TransitionLog
+     */
+    omit?: TransitionLogOmit<ExtArgs> | null
+  }
+
+
+  /**
    * Model IdempotencyKey
    */
 
@@ -7015,6 +8161,19 @@ export namespace Prisma {
   export type BalanceScalarFieldEnum = (typeof BalanceScalarFieldEnum)[keyof typeof BalanceScalarFieldEnum]
 
 
+  export const TransitionLogScalarFieldEnum: {
+    id: 'id',
+    domain: 'domain',
+    entityId: 'entityId',
+    fromState: 'fromState',
+    toState: 'toState',
+    meta: 'meta',
+    createdAt: 'createdAt'
+  };
+
+  export type TransitionLogScalarFieldEnum = (typeof TransitionLogScalarFieldEnum)[keyof typeof TransitionLogScalarFieldEnum]
+
+
   export const IdempotencyKeyScalarFieldEnum: {
     id: 'id',
     userId: 'userId',
@@ -7159,20 +8318,6 @@ export namespace Prisma {
 
 
   /**
-   * Reference to a field of type 'IdempotencyStatus'
-   */
-  export type EnumIdempotencyStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'IdempotencyStatus'>
-    
-
-
-  /**
-   * Reference to a field of type 'IdempotencyStatus[]'
-   */
-  export type ListEnumIdempotencyStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'IdempotencyStatus[]'>
-    
-
-
-  /**
    * Reference to a field of type 'Json'
    */
   export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
@@ -7183,6 +8328,20 @@ export namespace Prisma {
    * Reference to a field of type 'QueryMode'
    */
   export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
+    
+
+
+  /**
+   * Reference to a field of type 'IdempotencyStatus'
+   */
+  export type EnumIdempotencyStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'IdempotencyStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'IdempotencyStatus[]'
+   */
+  export type ListEnumIdempotencyStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'IdempotencyStatus[]'>
     
 
 
@@ -7461,6 +8620,70 @@ export namespace Prisma {
     userId?: IntWithAggregatesFilter<"Balance"> | number
     amount?: IntWithAggregatesFilter<"Balance"> | number
     locked?: IntWithAggregatesFilter<"Balance"> | number
+  }
+
+  export type TransitionLogWhereInput = {
+    AND?: TransitionLogWhereInput | TransitionLogWhereInput[]
+    OR?: TransitionLogWhereInput[]
+    NOT?: TransitionLogWhereInput | TransitionLogWhereInput[]
+    id?: IntFilter<"TransitionLog"> | number
+    domain?: StringFilter<"TransitionLog"> | string
+    entityId?: IntFilter<"TransitionLog"> | number
+    fromState?: StringFilter<"TransitionLog"> | string
+    toState?: StringFilter<"TransitionLog"> | string
+    meta?: JsonNullableFilter<"TransitionLog">
+    createdAt?: DateTimeFilter<"TransitionLog"> | Date | string
+  }
+
+  export type TransitionLogOrderByWithRelationInput = {
+    id?: SortOrder
+    domain?: SortOrder
+    entityId?: SortOrder
+    fromState?: SortOrder
+    toState?: SortOrder
+    meta?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type TransitionLogWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    AND?: TransitionLogWhereInput | TransitionLogWhereInput[]
+    OR?: TransitionLogWhereInput[]
+    NOT?: TransitionLogWhereInput | TransitionLogWhereInput[]
+    domain?: StringFilter<"TransitionLog"> | string
+    entityId?: IntFilter<"TransitionLog"> | number
+    fromState?: StringFilter<"TransitionLog"> | string
+    toState?: StringFilter<"TransitionLog"> | string
+    meta?: JsonNullableFilter<"TransitionLog">
+    createdAt?: DateTimeFilter<"TransitionLog"> | Date | string
+  }, "id">
+
+  export type TransitionLogOrderByWithAggregationInput = {
+    id?: SortOrder
+    domain?: SortOrder
+    entityId?: SortOrder
+    fromState?: SortOrder
+    toState?: SortOrder
+    meta?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    _count?: TransitionLogCountOrderByAggregateInput
+    _avg?: TransitionLogAvgOrderByAggregateInput
+    _max?: TransitionLogMaxOrderByAggregateInput
+    _min?: TransitionLogMinOrderByAggregateInput
+    _sum?: TransitionLogSumOrderByAggregateInput
+  }
+
+  export type TransitionLogScalarWhereWithAggregatesInput = {
+    AND?: TransitionLogScalarWhereWithAggregatesInput | TransitionLogScalarWhereWithAggregatesInput[]
+    OR?: TransitionLogScalarWhereWithAggregatesInput[]
+    NOT?: TransitionLogScalarWhereWithAggregatesInput | TransitionLogScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"TransitionLog"> | number
+    domain?: StringWithAggregatesFilter<"TransitionLog"> | string
+    entityId?: IntWithAggregatesFilter<"TransitionLog"> | number
+    fromState?: StringWithAggregatesFilter<"TransitionLog"> | string
+    toState?: StringWithAggregatesFilter<"TransitionLog"> | string
+    meta?: JsonNullableWithAggregatesFilter<"TransitionLog">
+    createdAt?: DateTimeWithAggregatesFilter<"TransitionLog"> | Date | string
   }
 
   export type IdempotencyKeyWhereInput = {
@@ -7778,6 +9001,73 @@ export namespace Prisma {
     userId?: IntFieldUpdateOperationsInput | number
     amount?: IntFieldUpdateOperationsInput | number
     locked?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type TransitionLogCreateInput = {
+    domain: string
+    entityId: number
+    fromState: string
+    toState: string
+    meta?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+  }
+
+  export type TransitionLogUncheckedCreateInput = {
+    id?: number
+    domain: string
+    entityId: number
+    fromState: string
+    toState: string
+    meta?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+  }
+
+  export type TransitionLogUpdateInput = {
+    domain?: StringFieldUpdateOperationsInput | string
+    entityId?: IntFieldUpdateOperationsInput | number
+    fromState?: StringFieldUpdateOperationsInput | string
+    toState?: StringFieldUpdateOperationsInput | string
+    meta?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TransitionLogUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    domain?: StringFieldUpdateOperationsInput | string
+    entityId?: IntFieldUpdateOperationsInput | number
+    fromState?: StringFieldUpdateOperationsInput | string
+    toState?: StringFieldUpdateOperationsInput | string
+    meta?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TransitionLogCreateManyInput = {
+    id?: number
+    domain: string
+    entityId: number
+    fromState: string
+    toState: string
+    meta?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+  }
+
+  export type TransitionLogUpdateManyMutationInput = {
+    domain?: StringFieldUpdateOperationsInput | string
+    entityId?: IntFieldUpdateOperationsInput | number
+    fromState?: StringFieldUpdateOperationsInput | string
+    toState?: StringFieldUpdateOperationsInput | string
+    meta?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TransitionLogUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    domain?: StringFieldUpdateOperationsInput | string
+    entityId?: IntFieldUpdateOperationsInput | number
+    fromState?: StringFieldUpdateOperationsInput | string
+    toState?: StringFieldUpdateOperationsInput | string
+    meta?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type IdempotencyKeyCreateInput = {
@@ -8208,13 +9498,6 @@ export namespace Prisma {
     amount?: SortOrder
     locked?: SortOrder
   }
-
-  export type EnumIdempotencyStatusFilter<$PrismaModel = never> = {
-    equals?: $Enums.IdempotencyStatus | EnumIdempotencyStatusFieldRefInput<$PrismaModel>
-    in?: $Enums.IdempotencyStatus[] | ListEnumIdempotencyStatusFieldRefInput<$PrismaModel>
-    notIn?: $Enums.IdempotencyStatus[] | ListEnumIdempotencyStatusFieldRefInput<$PrismaModel>
-    not?: NestedEnumIdempotencyStatusFilter<$PrismaModel> | $Enums.IdempotencyStatus
-  }
   export type JsonNullableFilter<$PrismaModel = never> =
     | PatchUndefined<
         Either<Required<JsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>,
@@ -8237,6 +9520,77 @@ export namespace Prisma {
     gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
     gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
     not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+  }
+
+  export type TransitionLogCountOrderByAggregateInput = {
+    id?: SortOrder
+    domain?: SortOrder
+    entityId?: SortOrder
+    fromState?: SortOrder
+    toState?: SortOrder
+    meta?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type TransitionLogAvgOrderByAggregateInput = {
+    id?: SortOrder
+    entityId?: SortOrder
+  }
+
+  export type TransitionLogMaxOrderByAggregateInput = {
+    id?: SortOrder
+    domain?: SortOrder
+    entityId?: SortOrder
+    fromState?: SortOrder
+    toState?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type TransitionLogMinOrderByAggregateInput = {
+    id?: SortOrder
+    domain?: SortOrder
+    entityId?: SortOrder
+    fromState?: SortOrder
+    toState?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type TransitionLogSumOrderByAggregateInput = {
+    id?: SortOrder
+    entityId?: SortOrder
+  }
+  export type JsonNullableWithAggregatesFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, 'path'>>
+
+  export type JsonNullableWithAggregatesFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedJsonNullableFilter<$PrismaModel>
+    _max?: NestedJsonNullableFilter<$PrismaModel>
+  }
+
+  export type EnumIdempotencyStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.IdempotencyStatus | EnumIdempotencyStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.IdempotencyStatus[] | ListEnumIdempotencyStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.IdempotencyStatus[] | ListEnumIdempotencyStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumIdempotencyStatusFilter<$PrismaModel> | $Enums.IdempotencyStatus
   }
 
   export type IdempotencyKeyUserIdKeyCompoundUniqueInput = {
@@ -8290,32 +9644,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumIdempotencyStatusFilter<$PrismaModel>
     _max?: NestedEnumIdempotencyStatusFilter<$PrismaModel>
-  }
-  export type JsonNullableWithAggregatesFilter<$PrismaModel = never> =
-    | PatchUndefined<
-        Either<Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, 'path'>>,
-        Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>
-      >
-    | OptionalFlat<Omit<Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, 'path'>>
-
-  export type JsonNullableWithAggregatesFilterBase<$PrismaModel = never> = {
-    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
-    path?: string[]
-    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
-    string_contains?: string | StringFieldRefInput<$PrismaModel>
-    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
-    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
-    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedJsonNullableFilter<$PrismaModel>
-    _max?: NestedJsonNullableFilter<$PrismaModel>
   }
 
   export type OnRampTransactionCreateNestedManyWithoutUserInput = {
@@ -8754,23 +10082,6 @@ export namespace Prisma {
     _min?: NestedEnumP2PStatusFilter<$PrismaModel>
     _max?: NestedEnumP2PStatusFilter<$PrismaModel>
   }
-
-  export type NestedEnumIdempotencyStatusFilter<$PrismaModel = never> = {
-    equals?: $Enums.IdempotencyStatus | EnumIdempotencyStatusFieldRefInput<$PrismaModel>
-    in?: $Enums.IdempotencyStatus[] | ListEnumIdempotencyStatusFieldRefInput<$PrismaModel>
-    notIn?: $Enums.IdempotencyStatus[] | ListEnumIdempotencyStatusFieldRefInput<$PrismaModel>
-    not?: NestedEnumIdempotencyStatusFilter<$PrismaModel> | $Enums.IdempotencyStatus
-  }
-
-  export type NestedEnumIdempotencyStatusWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.IdempotencyStatus | EnumIdempotencyStatusFieldRefInput<$PrismaModel>
-    in?: $Enums.IdempotencyStatus[] | ListEnumIdempotencyStatusFieldRefInput<$PrismaModel>
-    notIn?: $Enums.IdempotencyStatus[] | ListEnumIdempotencyStatusFieldRefInput<$PrismaModel>
-    not?: NestedEnumIdempotencyStatusWithAggregatesFilter<$PrismaModel> | $Enums.IdempotencyStatus
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumIdempotencyStatusFilter<$PrismaModel>
-    _max?: NestedEnumIdempotencyStatusFilter<$PrismaModel>
-  }
   export type NestedJsonNullableFilter<$PrismaModel = never> =
     | PatchUndefined<
         Either<Required<NestedJsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<NestedJsonNullableFilterBase<$PrismaModel>>, 'path'>>,
@@ -8793,6 +10104,23 @@ export namespace Prisma {
     gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
     gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
     not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+  }
+
+  export type NestedEnumIdempotencyStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.IdempotencyStatus | EnumIdempotencyStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.IdempotencyStatus[] | ListEnumIdempotencyStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.IdempotencyStatus[] | ListEnumIdempotencyStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumIdempotencyStatusFilter<$PrismaModel> | $Enums.IdempotencyStatus
+  }
+
+  export type NestedEnumIdempotencyStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.IdempotencyStatus | EnumIdempotencyStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.IdempotencyStatus[] | ListEnumIdempotencyStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.IdempotencyStatus[] | ListEnumIdempotencyStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumIdempotencyStatusWithAggregatesFilter<$PrismaModel> | $Enums.IdempotencyStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumIdempotencyStatusFilter<$PrismaModel>
+    _max?: NestedEnumIdempotencyStatusFilter<$PrismaModel>
   }
 
   export type OnRampTransactionCreateWithoutUserInput = {

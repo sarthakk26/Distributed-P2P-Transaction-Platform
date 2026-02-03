@@ -1,46 +1,111 @@
-import { prisma } from "@repo/db"
+import { NextResponse } from "next/server";
+import { prisma } from "@repo/db";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
+import { generateToken } from "@/lib/token";
 import { logTransition } from "@/observability/transitionLogger";
-import { findStuckOnRamps } from "./OnRamp";
 
-export async function autoFailOnRamp(id: number) {
-    const updated = await prisma.onRampTransaction.updateMany({
-        where: {
-            id,
-            status: "PROCESSING"
-        },
+const BANK_URL = process.env.DUMMY_BANK_URL;
+
+export async function POST(req: Request) {
+  try {
+    const session = await getServerSession(authOptions);
+    const userId = session?.user?.id;
+
+    if (!userId) {
+      return NextResponse.json({ message: "Unauthenticated" }, { status: 401 });
+    }
+
+    const body = await req.json();
+    const provider: string = body?.provider;
+    const amount: number = Number(body?.amount);
+
+    if (!provider || !amount || amount <= 0) {
+      return NextResponse.json({ message: "Invalid payload" }, { status: 400 });
+    }
+
+    if (!BANK_URL) {
+      console.error("DUMMY_BANK_URL not set");
+      return NextResponse.json({ message: "Server config error" }, { status: 500 });
+    }
+
+    const token = generateToken();
+
+    // 1️⃣ INITIATED (atomic)
+    const txn = await prisma.$transaction(async (tx) => {
+      const created = await tx.onRampTransaction.create({
         data: {
-            status: "FAILED"
-        }
+          userId: Number(userId),
+          provider,
+          amount,
+          token,
+          status: "INITIATED",
+          startTime: new Date(),
+        },
+      });
+
+      await logTransition(tx, {
+        domain: "ONRAMP",
+        entityId: created.id,
+        from: "NONE",
+        to: "INITIATED",
+        meta: { amount, provider },
+      });
+
+      return created;
     });
 
-    if (updated.count === 1) {
-        logTransition({
-            domain: "ONRAMP",
-            entityId: id,
-            from: "PROCESSING",
-            to: "FAILED",
-            meta: { reason: "TIMEOUT" }
-        })
-        return true;
-    }
-    return false;
-}
-
-export async function runOnRampTimeouts() {
-    const stuck = await findStuckOnRamps();
-
-    const results = [];
-
-    for (const txn of stuck) {
-        const failed = await autoFailOnRamp(txn.id);
-        results.push({
-            id: txn.id,
-            failed
-        })
+    // 2️⃣ External bank call (NO DB transaction)
+    try {
+      await fetch(BANK_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          token,
+          userId,
+          amount: String(amount),
+        }),
+      });
+    } catch (err) {
+      console.error("Bank call failed", err);
+      return NextResponse.json(
+        { message: "Bank unavailable, try again later" },
+        { status: 503 }
+      );
     }
 
-    return {
-        checked: stuck.length,
-        results
-    }
+    // 3️⃣ INITIATED → PROCESSING (atomic)
+    await prisma.$transaction(async (tx) => {
+      const updated = await tx.onRampTransaction.updateMany({
+        where: {
+          id: txn.id,
+          status: "INITIATED",
+        },
+        data: {
+          status: "PROCESSING",
+        },
+      });
+
+      if (updated.count !== 1) {
+        throw new Error("INVALID_STATE_TRANSITION");
+      }
+
+      await logTransition(tx, {
+        domain: "ONRAMP",
+        entityId: txn.id,
+        from: "INITIATED",
+        to: "PROCESSING",
+        meta: { amount, provider },
+      });
+    });
+
+    return NextResponse.json({ token }, { status: 201 });
+
+  } catch (err) {
+    console.error("onramp start error:", err);
+    return NextResponse.json(
+      { message: "Server error" },
+      { status: 500 }
+    );
+  }
 }

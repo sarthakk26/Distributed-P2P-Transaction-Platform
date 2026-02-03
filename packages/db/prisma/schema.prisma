@@ -52,6 +52,19 @@ model Balance {
   user   User @relation(fields: [userId], references: [id])
 }
 
+model TransitionLog {
+  id         Int      @id @default(autoincrement())
+  domain     String
+  entityId   Int
+  fromState  String
+  toState    String
+  meta       Json?
+  createdAt  DateTime @default(now())
+
+  @@index([domain, entityId])
+  @@index([createdAt])
+}
+
 model IdempotencyKey {
   id        Int               @id @default(autoincrement())
   userId    Int
