@@ -1,82 +1,106 @@
-import { prisma } from '@repo/db'
+import { prisma } from "@repo/db";
 
 const STUCK_THRESHOLD_MINUTES = 5;
 
-export async function runReconciliation() {
-    const report: string[] = [];
+/**
+ * 1. Stuck LOCKED transfers
+ * Transfers stuck in LOCKED beyond threshold
+ */
+export async function findStuckLockedTransfers() {
+  const threshold = new Date(
+    Date.now() - STUCK_THRESHOLD_MINUTES * 60 * 1000
+  );
 
-    // 1️⃣ LOCKED balances without LOCKED transfers
-    const lockedBalances = await prisma.balance.findMany({
-        where: {
-            locked: { gt: 0 }
+  return prisma.p2pTransfer.findMany({
+    where: {
+      status: "LOCKED",
+      timestamp: { lt: threshold },
+    },
+    select: {
+      id: true,
+      amount: true,
+      timestamp: true,
+      fromUser: { select: { number: true } },
+      toUser: { select: { number: true } },
+    },
+  });
+}
+
+/**
+ * 2. FAILED transfers with locked balance still present
+ * Indicates rollback failure or invariant violation
+ */
+export async function findFailedWithLockedBalance() {
+  return prisma.p2pTransfer.findMany({
+    where: {
+      status: "FAILED",
+      fromUser: {
+        Balance: {
+          locked: { gt: 0 },
         },
-        include: {
-            user: {
-                select: { id: true, number: true }
-            }
-        }
-    })
-
-    for (const bal of lockedBalances) {
-        const lockedTransfersCount = await prisma.p2pTransfer.count({
-            where: {
-                fromUserId: bal.userId,
-                status: "LOCKED"
-            }
-        })
-
-        if (lockedTransfersCount === 0) {
-            report.push(
-                `❌ User ${bal.user.number} has locked balance ${bal.locked} with no LOCKED transfers`
-            )
-        }
-    };
-
-    // 2️⃣ Stuck LOCKED transfers
-    const threshold = new Date(
-        Date.now() - STUCK_THRESHOLD_MINUTES * 60 * 1000
-    );
-
-    const stuckTransfers = await prisma.p2pTransfer.findMany({
-        where: {
-            status: "LOCKED",
-            timestamp: { lt: threshold }
+      },
+    },
+    select: {
+      id: true,
+      amount: true,
+      fromUser: {
+        select: {
+          number: true,
+          Balance: {
+            select: { locked: true },
+          },
         },
-        include: {
-            fromUser: { select: { number: true } },
-            toUser: { select: { number: true } }
-        }
-    });
+      },
+    },
+  });
+}
 
-    for (const tx of stuckTransfers) {
-        report.push(
-            `⚠️ P2P#${tx.id} LOCKED for too long | from=${tx.fromUser.number} → to=${tx.toUser.number} | amount=${tx.amount}`
-        );
-    }
-
-    // 3️⃣ Negative balances
-    const negativeBalances = await prisma.balance.findMany({
-        where: {
-            amount: { lt: 0 }
+/**
+ * 3. Invalid LOCKED state
+ * LOCKED transfer but:
+ * - no balance row
+ * - locked < transfer amount
+ */
+export async function findInvalidLockedState() {
+  const lockedTransfers = await prisma.p2pTransfer.findMany({
+    where: { status: "LOCKED" },
+    select: {
+      id: true,
+      amount: true,
+      fromUser: {
+        select: {
+          number: true,
+          Balance: {
+            select: { locked: true },
+          },
         },
-        include: {
-            user: { select: { number: true } }
-        }
-    })
+      },
+    },
+  });
 
-    for (const bal of negativeBalances) {
-        report.push(
-            `❌ NEGATIVE balance detected | user=${bal.user.number} | amount=${bal.amount}`
-        );
-    }
-    // 4️⃣ Summary
-    if (report.length === 0) {
-        console.log("✅ Reconciliation clean: no issues detected");
-    } else {
-        console.warn("🚨 RECONCILIATION ISSUES DETECTED");
-        for (const line of report) {
-            console.warn(line);
-        }
-    }
-    return report
+  return lockedTransfers.filter((tx) => {
+    const balance = tx.fromUser.Balance;
+
+    // Missing balance row OR insufficient locked amount
+    if (!balance) return true;
+
+    return balance.locked < tx.amount;
+  });
+}
+
+/**
+ * 4. Negative balances
+ */
+export async function findNegativeBalances() {
+  return prisma.balance.findMany({
+    where: {
+      amount: { lt: 0 },
+    },
+    select: {
+      amount: true,
+      user: {
+        select: { number: true },
+      },
+    },
+  });
 }

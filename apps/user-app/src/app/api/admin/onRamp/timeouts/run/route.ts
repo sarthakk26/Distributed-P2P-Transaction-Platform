@@ -1,7 +1,7 @@
 import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 import { authOptions } from "@/lib/auth";
-import { runOnRampTimeouts } from "@/reconciliation";
+import { runOnRampReconciliation } from "@/reconciliation";
 
 export async function POST() {
     const session = await getServerSession(authOptions);
@@ -13,7 +13,7 @@ export async function POST() {
     }
 
     try {
-        const result = await runOnRampTimeouts();
+        const result = await runOnRampReconciliation();
         return NextResponse.json(result)
     } catch (err) {
         console.error("ADMIN TIMEOUT RUN ERROR:", err);
