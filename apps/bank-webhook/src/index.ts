@@ -21,7 +21,6 @@ function verifySignature(reqBody: any, signature: string) {
 app.post("/hdfcWebhook", async (req, res) => {
 
     const signature = req.headers["x-bank-signature"] as string;
-    console.log("Signature at WebHook:", signature)
     
 
     if (!signature) {
