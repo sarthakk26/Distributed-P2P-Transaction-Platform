@@ -53,7 +53,7 @@ export const SendMoneyForm = ({
   };
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="h-full flex flex-col justify-between">
       <div className="space-y-4">
         <TextInput
           label="Number"
@@ -70,7 +70,7 @@ export const SendMoneyForm = ({
           onChange={(val) => setAmount(val)}
         />
       </div>
-      <div className="flex justify-end gap-2">
+      <div className="flex justify-center pt-4">
         <Button
           onClick={handleTransfer}
           className="w-full bg-[#575DFF] hover:bg-[#4a4fc7] text-white"
