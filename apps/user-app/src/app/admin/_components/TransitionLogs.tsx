@@ -47,39 +47,61 @@ export default async function TransitionLogs() {
 
   if (logs.length === 0) {
     return (
-      <div className="text-sm text-slate-500">
-        No transition logs found.
+      <div className="rounded-xl border border-slate-700 bg-slate-800 p-6">
+        <p className="text-sm text-slate-400">
+          No transition logs found.
+        </p>
       </div>
     );
   }
 
   return (
-    <div className="bg-white border rounded-lg p-4">
-      <h2 className="text-lg font-semibold mb-4">Transition Logs</h2>
-
+    <div className="overflow-hidden rounded-xl border border-slate-700 bg-slate-800 shadow-sm">
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
-          <thead className="text-left border-b text-slate-600">
-            <tr>
-              <th className="py-2">Domain</th>
-              <th>Entity</th>
-              <th>From</th>
-              <th>To</th>
-              <th>Time</th>
+          <thead>
+            <tr className="border-b border-slate-700 bg-slate-800">
+              <th className="px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-400">Domain</th>
+              <th className="px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-400">Entity</th>
+              <th className="px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-400">From</th>
+              <th className="px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-400">To</th>
+              <th className="px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-400">Time</th>
             </tr>
           </thead>
-          <tbody>
-            {logs.map((log) => (
-              <tr key={log.id} className="border-b last:border-0">
-                <td className="py-2">{log.domain}</td>
-                <td>{log.entityId}</td>
-                <td className="text-slate-500">{log.fromState}</td>
-                <td className="font-medium">{log.toState}</td>
-                <td className="text-slate-500">
-                  {new Date(log.createdAt).toLocaleString()}
-                </td>
-              </tr>
-            ))}
+          <tbody className="divide-y divide-slate-700 bg-slate-800">
+            {logs.map((log, idx) => {
+              const domainColor = log.domain === "P2P" ? "purple" : "blue";
+              return (
+                <tr key={log.id} className={`transition-colors hover:bg-slate-700/50 ${idx % 2 === 0 ? 'bg-slate-800' : 'bg-slate-800/50'}`}>
+                  <td className="px-5 py-3.5">
+                    <span className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold ${
+                      domainColor === "purple" 
+                        ? "bg-purple-900/50 text-purple-300" 
+                        : "bg-blue-900/50 text-blue-300"
+                    }`}>
+                      {log.domain}
+                    </span>
+                  </td>
+                  <td className="px-5 py-3.5">
+                    <span className="font-mono text-xs text-slate-100">{log.entityId}</span>
+                  </td>
+                  <td className="px-5 py-3.5">
+                    <span className="text-slate-400">{log.fromState}</span>
+                  </td>
+                  <td className="px-5 py-3.5">
+                    <div className="flex items-center gap-2">
+                      <span className="font-semibold text-slate-100">{log.toState}</span>
+                      <svg className="h-3 w-3 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                      </svg>
+                    </div>
+                  </td>
+                  <td className="px-5 py-3.5 text-slate-400">
+                    {new Date(log.createdAt).toLocaleString()}
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>
