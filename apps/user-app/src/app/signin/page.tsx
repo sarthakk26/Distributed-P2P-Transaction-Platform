@@ -36,13 +36,10 @@ export default function SignInPage() {
 
   return (
     <div className="h-screen w-full relative flex items-center justify-center overflow-hidden bg-[#020617]">
-      
-      {/* 1. BACKGROUND IMAGE */}
-      {/* Make sure 'result_0.jpg' is saved as 'auth-bg.png' in your public folder */}
       <div 
         className="absolute inset-0 z-0"
         style={{
-            backgroundImage: `url('/auth-bg.png')`,
+            backgroundImage: `url('/base.png')`,
             backgroundSize: 'cover',
             backgroundPosition: 'center',
             opacity: 0.8 
@@ -70,7 +67,7 @@ export default function SignInPage() {
                         Phone Number
                     </label>
                     <input 
-                        type="text" 
+                        type="text"
                         placeholder="Enter phone number"
                         value={phone}
                         onChange={(e) => setPhone(e.target.value)}

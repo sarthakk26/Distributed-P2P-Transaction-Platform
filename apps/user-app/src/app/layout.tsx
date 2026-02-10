@@ -1,14 +1,17 @@
+import { Orbitron, Space_Grotesk } from "next/font/google";
 import "./globals.css";
-import { Providers } from "@/providers/providers";
 import { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Providers } from "@/providers/providers";
 
-const inter = Inter({ subsets: ["latin"] });
+const orbitron = Orbitron({
+  subsets: ["latin"],
+  variable: "--font-orbitron",
+});
 
-export const metadata: Metadata = {
-  title: "Wallet",
-  description: "Simple Wallet app",
-};
+const spaceGrotesk = Space_Grotesk({
+  subsets: ["latin"],
+  variable: "--font-space-grotesk",
+});
 
 export default function RootLayout({
   children,
@@ -17,10 +20,8 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${inter.className} antialiased min-h-screen bg-[#ebe6e6]`}>
-        <Providers>
-          {children}
-        </Providers>
+      <body className={`${orbitron.variable} ${spaceGrotesk.variable}`}>
+        <Providers>{children}</Providers>
       </body>
     </html>
   );
