@@ -7,7 +7,7 @@ const TabButton = ({ active, onClick, children }: { active: boolean; onClick: ()
   return (
     <button
       onClick={onClick}
-      className={`flex-1 py-5 text-md font-medium transition-all duration-200 relative ${
+      className={`flex-1 py-4 text-sm md:text-base font-medium transition-all duration-200 relative ${
         active ? "text-[#575DFF]" : "text-white hover:text-gray-400"
       }`}
     >
@@ -27,10 +27,10 @@ export const QuickActionCard = ({selectedContactNumber}:{selectedContactNumber?:
   },[selectedContactNumber])
 
   return (
-    <div className="h-full flex flex-col bg-[#0F172A] border border-gray-800 rounded-xl p-1 shadow-sm">
+    <div className="w-full flex flex-col bg-[#0F172A] border border-gray-800 rounded-xl p-1 shadow-sm">
       
-      {/* Tabs */}
-      <div className="flex border-b border-gray-800">
+      {/* Tabs - FIXED */}
+      <div className="flex border-b border-gray-800 flex-shrink-0">
         <TabButton active={action === "send"} onClick={() => setAction("send")}>
           Send Money
         </TabButton>
@@ -39,12 +39,10 @@ export const QuickActionCard = ({selectedContactNumber}:{selectedContactNumber?:
         </TabButton>
       </div>
 
-      {/* Content Area */}
-      <div className="flex-1 flex flex-col justify-start gap-6 p-6 min-h-[280px]">
-        
+      {/* Content Area - Natural Height */}
+      <div className="p-4 md:p-6">
         {/* Render Form */}
         {action === "send" ? <SendMoneyForm key={selectedContactNumber} prefilledNumber={selectedContactNumber} /> : <AddMoneyForm />}
-
       </div>
     </div>
   );
