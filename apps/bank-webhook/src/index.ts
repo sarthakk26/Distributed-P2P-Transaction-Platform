@@ -7,6 +7,10 @@ const app = express();
 
 app.use(express.json());
 
+app.get("health", (_req, res) => {
+    res.status(200).json({ status: "ok" });
+})
+
 const SECRET = process.env.BANK_WEBHOOK_SECRET!;
 
 function verifySignature(reqBody: any, signature: string) {
@@ -21,7 +25,7 @@ function verifySignature(reqBody: any, signature: string) {
 app.post("/hdfcWebhook", async (req, res) => {
 
     const signature = req.headers["x-bank-signature"] as string;
-    
+
 
     if (!signature) {
         return res.status(200).json({ message: "Missing signature Ignored" });
@@ -87,7 +91,7 @@ app.post("/hdfcWebhook", async (req, res) => {
             if (updated.count !== 1) {
                 throw new Error("INVALID_STATE_TRANSITION");
             }
-            await logTransition(tx,{
+            await logTransition(tx, {
                 domain: "ONRAMP",
                 entityId: txn.id,
                 from: "PROCESSING",

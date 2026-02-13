@@ -150,7 +150,8 @@ export async function transferMoney(
       await tx.balance.update({
         where: { userId: from },
         data: {
-          amount: { decrement: amount }
+          amount: { decrement: amount },
+          locked: { decrement: amount },
         }
       });
 

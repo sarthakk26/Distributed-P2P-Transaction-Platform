@@ -15,7 +15,8 @@
     "ts-node": "^10.9.2",
     "tsx": "^4.21.0",
     "turbo": "^2.6.1",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "wait-on": "^9.0.4"
   },
   "engines": {
     "node": ">=18"
