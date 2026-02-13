@@ -92,7 +92,7 @@ jobs:
               run:  npm ci
 
             - name: Run Prisma Migrations
-              run : npx prisma migrate deplot --schema=packages/db/prisma/schema.prisma
+              run : npx prisma migrate deploy --schema=packages/db/prisma/schema.prisma
 
             - name: Start bank-webhook service
               run : |
