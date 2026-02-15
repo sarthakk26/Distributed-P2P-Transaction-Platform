@@ -5,7 +5,6 @@ import { useState, useRef, useEffect } from "react";
 import { PaymentModal } from "./PaymentModal";
 import { toast } from "sonner";
 import { ChevronDown, Check } from "lucide-react";
-import { v4 as uuidv4 } from "uuid";
 
 const SUPPORTED_BANKS = [
   { name: "HDFC Bank", redirectUrl: "https://netbanking.hdfcbank.com" },
@@ -13,9 +12,7 @@ const SUPPORTED_BANKS = [
 ];
 
 export const AddMoneyForm = () => {
-  const [redirectUrl, setRedirectUrl] = useState(
-    SUPPORTED_BANKS[0]?.redirectUrl,
-  );
+  const [redirectUrl, setRedirectUrl] = useState(SUPPORTED_BANKS[0]?.redirectUrl);
   const [provider, setProvider] = useState(SUPPORTED_BANKS[0]?.name || "");
   const [value, setValue] = useState<number>(0);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -29,13 +26,10 @@ export const AddMoneyForm = () => {
     setIsProcessing(true);
     const toastId = toast.loading("Connecting to bank...");
 
-
     try {
       const res = await fetch("/api/onramp/start", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ provider, amount: value }),
       });
       if (!res.ok) throw new Error();
@@ -62,10 +56,7 @@ export const AddMoneyForm = () => {
           <div className="pt-2">
             <CustomSelect
               label="Select Bank"
-              options={SUPPORTED_BANKS.map((x) => ({
-                key: x.name,
-                value: x.name,
-              }))}
+              options={SUPPORTED_BANKS.map((x) => ({ key: x.name, value: x.name }))}
               onSelect={(value) => {
                 const bank = SUPPORTED_BANKS.find((x) => x.name === value);
                 setRedirectUrl(bank?.redirectUrl || "");
@@ -90,6 +81,8 @@ export const AddMoneyForm = () => {
       {token && (
         <PaymentModal
           token={token}
+          provider={provider}       // ← new
+          amount={value}            // ← new
           onClose={() => {
             setToken(null);
             setIsProcessing(false);
@@ -101,7 +94,7 @@ export const AddMoneyForm = () => {
   );
 };
 
-// --- UPDATED HIGH-CONTRAST SELECT ---
+// ─── Custom Select (unchanged) ────────────────────────────────────
 
 interface Option {
   key: string;
@@ -139,11 +132,12 @@ const CustomSelect = ({
         {label}
       </label>
 
-      {/* Trigger Button */}
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className={`relative w-full bg-[#0F172A] border border-gray-800 text-white font-medium text-sm rounded-lg focus:ring-1 focus:ring-blue-500 focus:border-blue-500 block p-3 text-left flex items-center justify-between transition-all ${isOpen ? "ring-1 ring-blue-500 border-blue-500" : ""}`}
+        className={`relative w-full bg-[#0F172A] border border-gray-800 text-white font-medium text-sm rounded-lg focus:ring-1 focus:ring-blue-500 focus:border-blue-500 block p-3 text-left flex items-center justify-between transition-all ${
+          isOpen ? "ring-1 ring-blue-500 border-blue-500" : ""
+        }`}
       >
         <span className="truncate">{selected}</span>
         <ChevronDown
@@ -152,7 +146,6 @@ const CustomSelect = ({
         />
       </button>
 
-      {/* Dropdown Menu */}
       {isOpen && (
         <div className="absolute z-50 w-full mt-1 bg-[#0F172A] border border-gray-800 rounded-lg shadow-xl overflow-hidden animate-in fade-in zoom-in-95 duration-100">
           <ul className="py-1 max-h-60 overflow-auto custom-scrollbar">
@@ -164,18 +157,14 @@ const CustomSelect = ({
                   onSelect(option.value);
                   setIsOpen(false);
                 }}
-                className={`px-4 py-3 text-sm font-medium cursor-pointer flex items-center justify-between group transition-colors
-                  ${
-                    selected === option.value
-                      ? "bg-[#575DFF] text-white" // SELECTED: Blue Background, White Text
-                      : "text-slate-300 hover:bg-white/5 hover:text-white" // NORMAL: Light Gray, White on Hover
-                  }
-                `}
+                className={`px-4 py-3 text-sm font-medium cursor-pointer flex items-center justify-between group transition-colors ${
+                  selected === option.value
+                    ? "bg-[#575DFF] text-white"
+                    : "text-slate-300 hover:bg-white/5 hover:text-white"
+                }`}
               >
                 {option.value}
-                {selected === option.value && (
-                  <Check size={16} className="text-white" />
-                )}
+                {selected === option.value && <Check size={16} className="text-white" />}
               </li>
             ))}
           </ul>
