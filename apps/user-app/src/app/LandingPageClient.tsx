@@ -5,6 +5,10 @@ import Link from "next/link";
 import Image from "next/image";
 
 export default function LandingPageClient() {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState<
+    "idle" | "success" | "error"
+  >("idle");
   const [activeSection, setActiveSection] = useState("");
   const [formData, setFormData] = useState({
     name: "",
@@ -15,7 +19,7 @@ export default function LandingPageClient() {
 
   useEffect(() => {
     const handleScroll = () => {
-      const sections = ["features", "security", "support"];
+      const sections = ["features", "how-it-works", "security", "support"];
       const scrollPosition = window.scrollY + 200;
 
       for (const section of sections) {
@@ -45,7 +49,7 @@ export default function LandingPageClient() {
   };
 
   const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -54,13 +58,52 @@ export default function LandingPageClient() {
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Placeholder - will add email functionality later
-    console.log("Form submitted:", formData);
-    alert("Thank you for contacting us! We'll get back to you soon.");
-    setFormData({ name: "", email: "", subject: "", message: "" });
+    setIsSubmitting(true);
+    setSubmitStatus("idle");
+
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+
+      if (!res.ok) throw new Error("Failed to send");
+
+      setSubmitStatus("success");
+      setFormData({ name: "", email: "", subject: "", message: "" });
+    } catch (err) {
+      setSubmitStatus("error");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
+
+  const steps = [
+    {
+      number: "1",
+      title: "Sign Up",
+      description:
+        "Create your account in minutes with our simple and secure registration process.",
+      icon: "👤",
+    },
+    {
+      number: "2",
+      title: "Add Funds",
+      description:
+        "Easily transfer money from your bank account to your Cosmos wallet.",
+      icon: "💳",
+    },
+    {
+      number: "3",
+      title: "Start Transacting",
+      description:
+        "Send money, make payments, and track your expenses with ease.",
+      icon: "⚡",
+    },
+  ];
 
   return (
     <div className="landing-page">
@@ -75,6 +118,12 @@ export default function LandingPageClient() {
             className={activeSection === "features" ? "active" : ""}
           >
             Features
+          </button>
+          <button
+            onClick={() => scrollToSection("how-it-works")}
+            className={activeSection === "how-it-works" ? "active" : ""}
+          >
+            How It Works
           </button>
           <button
             onClick={() => scrollToSection("security")}
@@ -119,7 +168,6 @@ export default function LandingPageClient() {
           </div>
 
           <div className="hero-visual">
-            {/* Floating decorative elements */}
             <div className="floating-element rocket-1">🚀</div>
             <div className="floating-element rocket-2">🚀</div>
             <div className="floating-element coin-1">🪙</div>
@@ -127,7 +175,6 @@ export default function LandingPageClient() {
             <div className="floating-element coin-3">🪙</div>
             <div className="floating-element magnify">🔍</div>
 
-            {/* Main concept image */}
             <div className="concept-container">
               <Image
                 src="/concept.png"
@@ -139,7 +186,6 @@ export default function LandingPageClient() {
               />
             </div>
 
-            {/* Character illustrations */}
             <div className="character-left floating-element">
               <div
                 className="character-avatar"
@@ -165,17 +211,15 @@ export default function LandingPageClient() {
             <div className="bot-character floating-element">🤖</div>
           </div>
 
-          {/* Sparkle decoration */}
           <div className="sparkle-decoration">✨</div>
         </section>
 
-        {/* Features Section - NEW DESIGN */}
+        {/* Features Section */}
         <section id="features" className="features-section">
           <div className="section-container">
             <h2 className="section-title">See Your Money Clearly</h2>
 
             <div className="feature-grid-new">
-              {/* Feature 1: Smart Dashboard */}
               <div className="feature-card-new">
                 <div className="feature-card-header">
                   <div className="feature-icon-new">📊</div>
@@ -192,7 +236,6 @@ export default function LandingPageClient() {
                 </div>
               </div>
 
-              {/* Feature 2: Instant Transfers */}
               <div className="feature-card-new">
                 <div className="feature-card-header">
                   <div className="feature-icon-new">⚡</div>
@@ -209,7 +252,6 @@ export default function LandingPageClient() {
                 </div>
               </div>
 
-              {/* Feature 3: Easy Top-ups */}
               <div className="feature-card-new">
                 <div className="feature-card-header">
                   <div className="feature-icon-new">💳</div>
@@ -225,7 +267,6 @@ export default function LandingPageClient() {
                 </div>
               </div>
 
-              {/* Feature 4: Built-In Safety */}
               <div className="feature-card-new">
                 <div className="feature-card-header">
                   <div className="feature-icon-new">🛡️</div>
@@ -245,11 +286,73 @@ export default function LandingPageClient() {
           </div>
         </section>
 
+        {/* How It Works Section */}
+        <section id="how-it-works" className="how-it-works-section">
+          <div className="section-container">
+            <h2 className="section-title">How Cosmos Works</h2>
+            <p className="section-subtitle">
+              Get started in three simple steps and take control of your
+              finances today.
+            </p>
+
+            <div className="steps-container">
+              {steps.map((step, index) => (
+                <React.Fragment key={step.number}>
+                  {/* Step card */}
+                  <div className="step-card">
+                    {/* Number badge */}
+                    <div className="step-number-badge">{step.number}</div>
+
+                    {/* Icon */}
+                    <div className="step-icon">{step.icon}</div>
+
+                    {/* Text */}
+                    <h3 className="step-title">{step.title}</h3>
+                    <p className="step-description">{step.description}</p>
+                  </div>
+
+                  {/* Connector arrow between cards */}
+                  {index < steps.length - 1 && (
+                    <div className="step-connector">
+                      <svg
+                        viewBox="0 0 60 24"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="connector-arrow"
+                      >
+                        <path
+                          d="M0 12 H52 M44 4 L52 12 L44 20"
+                          stroke="url(#arrowGrad)"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                        <defs>
+                          <linearGradient
+                            id="arrowGrad"
+                            x1="0"
+                            y1="0"
+                            x2="60"
+                            y2="0"
+                          >
+                            <stop offset="0%" stopColor="#667eea" />
+                            <stop offset="100%" stopColor="#764ba2" />
+                          </linearGradient>
+                        </defs>
+                      </svg>
+                    </div>
+                  )}
+                </React.Fragment>
+              ))}
+            </div>
+          </div>
+        </section>
+
         {/* Security Section */}
         <section id="security" className="security-section">
           <div className="section-container">
             <h2 className="section-title">
-              Your Money is Protected - By Design{" "}
+              Your Money is Protected - By Design
             </h2>
             <p className="section-subtitle">
               Security isn't an add-on here. Every transaction is engineered to
@@ -266,7 +369,6 @@ export default function LandingPageClient() {
                   locking, preventing double spending and partial updates.
                 </p>
               </div>
-
               <div className="security-card">
                 <div className="security-icon">✅</div>
                 <h3>Verified Bank Webhooks</h3>
@@ -335,26 +437,41 @@ export default function LandingPageClient() {
           </div>
         </section>
 
-        {/* Support Section - SMALLER & MORE CONCISE */}
-        <section id="support" className="min-h-screen py-24 px-[5%] bg-[rgba(10,14,39,0.85)] backdrop-blur-[20px]">
+        {/* Support Section */}
+        <section
+          id="support"
+          className="min-h-screen py-24 px-[5%] bg-[rgba(10,14,39,0.85)] backdrop-blur-[20px]"
+        >
           <div className="max-w-[1200px] mx-auto px-8">
-            <h2 className="font-['Orbitron'] text-5xl text-white text-center mb-4 uppercase tracking-[-1px]">We're Here to Help</h2>
+            <h2 className="font-['Orbitron'] text-5xl text-white text-center mb-4 uppercase tracking-[-1px]">
+              We're Here to Help
+            </h2>
             <p className="text-center text-xl text-white/70 mb-16 max-w-[700px] mx-auto">
-              Have a question or need assistance? Send us a message and we'll get back to you within 24 hours.
+              Have a question or need assistance? Send us a message and we'll
+              get back to you within 24 hours.
             </p>
 
             <div className="max-w-[600px] mx-auto">
               <div className="bg-white/5 border border-white/10 rounded-2xl p-8 backdrop-blur-[10px]">
                 <div className="text-center mb-8">
                   <div className="text-5xl mb-3">📧</div>
-                  <h3 className="font-['Orbitron'] text-2xl text-white mb-1">Send us a Message</h3>
-                  <p className="text-white/60 text-sm">We typically respond within 24 hours</p>
+                  <h3 className="font-['Orbitron'] text-2xl text-white mb-1">
+                    Send us a Message
+                  </h3>
+                  <p className="text-white/60 text-sm">
+                    We typically respond within 24 hours
+                  </p>
                 </div>
 
                 <form onSubmit={handleSubmit} className="flex flex-col gap-4">
                   <div className="grid grid-cols-2 gap-4">
                     <div className="flex flex-col gap-1.5">
-                      <label htmlFor="name" className="text-white/90 font-semibold text-sm">Name</label>
+                      <label
+                        htmlFor="name"
+                        className="text-white/90 font-semibold text-sm"
+                      >
+                        Name
+                      </label>
                       <input
                         type="text"
                         id="name"
@@ -366,9 +483,13 @@ export default function LandingPageClient() {
                         className="bg-white/8 border border-white/20 rounded-xl px-4 py-2.5 text-white text-sm transition-all duration-300 focus:outline-none focus:border-[#667eea] focus:bg-white/12 focus:ring-2 focus:ring-[rgba(102,126,234,0.1)] placeholder:text-white/40"
                       />
                     </div>
-
                     <div className="flex flex-col gap-1.5">
-                      <label htmlFor="email" className="text-white/90 font-semibold text-sm">Email</label>
+                      <label
+                        htmlFor="email"
+                        className="text-white/90 font-semibold text-sm"
+                      >
+                        Email
+                      </label>
                       <input
                         type="email"
                         id="email"
@@ -383,7 +504,12 @@ export default function LandingPageClient() {
                   </div>
 
                   <div className="flex flex-col gap-1.5">
-                    <label htmlFor="subject" className="text-white/90 font-semibold text-sm">Subject</label>
+                    <label
+                      htmlFor="subject"
+                      className="text-white/90 font-semibold text-sm"
+                    >
+                      Subject
+                    </label>
                     <input
                       type="text"
                       id="subject"
@@ -397,7 +523,12 @@ export default function LandingPageClient() {
                   </div>
 
                   <div className="flex flex-col gap-1.5">
-                    <label htmlFor="message" className="text-white/90 font-semibold text-sm">Message</label>
+                    <label
+                      htmlFor="message"
+                      className="text-white/90 font-semibold text-sm"
+                    >
+                      Message
+                    </label>
                     <textarea
                       id="message"
                       name="message"
@@ -410,21 +541,35 @@ export default function LandingPageClient() {
                     />
                   </div>
 
-                  <button type="submit" className="bg-gradient-to-br from-[#667eea] to-[#764ba2] text-white px-8 py-3 rounded-xl font-bold text-base transition-all duration-300 mt-2 shadow-[0_10px_30px_rgba(102,126,234,0.3)] hover:-translate-y-1 hover:shadow-[0_15px_40px_rgba(102,126,234,0.5)] active:-translate-y-0.5">
-                    Send Message
+                  <button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="w-full bg-gradient-to-br from-[#667eea] to-[#764ba2] text-white px-8 py-3 rounded-xl font-bold text-base transition-all duration-300 mt-2 shadow-[0_10px_30px_rgba(102,126,234,0.3)] hover:-translate-y-1 hover:shadow-[0_15px_40px_rgba(102,126,234,0.5)] active:-translate-y-0.5 disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:translate-y-0"
+                  >
+                    {isSubmitting ? "Sending..." : "Send Message"}
                   </button>
+                  {submitStatus === "success" && (
+                    <p className="text-green-400 text-sm text-center font-medium mt-2">
+                      ✓ Message sent! We'll get back to you within 24 hours.
+                    </p>
+                  )}
+
+                  {submitStatus === "error" && (
+                    <p className="text-red-400 text-sm text-center font-medium mt-2">
+                      ✗ Something went wrong. Please try again.
+                    </p>
+                  )}
                 </form>
               </div>
             </div>
           </div>
         </section>
 
-
         {/* Footer */}
         <div className="footer-bottom">
-            <p>&copy; 2026 Cosmos Wallet. All rights reserved.</p>
-          </div>
-      </div> 
+          <p>&copy; 2026 Cosmos Wallet. All rights reserved.</p>
+        </div>
+      </div>
 
       <style jsx>{`
         .landing-page {
@@ -433,7 +578,6 @@ export default function LandingPageClient() {
           overflow-x: hidden;
         }
 
-        /* Fixed Background */
         .fixed-background {
           position: fixed;
           top: 0;
@@ -547,13 +691,12 @@ export default function LandingPageClient() {
           box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
         }
 
-        /* Content Wrapper */
         .content-wrapper {
           position: relative;
           z-index: 1;
         }
 
-        /* Hero Section */
+        /* Hero */
         .hero-section {
           min-height: 100vh;
           display: flex;
@@ -609,7 +752,6 @@ export default function LandingPageClient() {
           filter: drop-shadow(0 20px 60px rgba(102, 126, 234, 0.3));
         }
 
-        /* Floating Elements */
         .floating-element {
           position: absolute;
           font-size: 3rem;
@@ -621,49 +763,41 @@ export default function LandingPageClient() {
           left: 5%;
           animation-delay: 0s;
         }
-
         .rocket-2 {
           top: 10%;
           right: 0;
           animation-delay: 1.5s;
         }
-
         .coin-1 {
           top: 20%;
           left: 35%;
           animation-delay: 0.5s;
         }
-
         .coin-2 {
           top: 1%;
           right: 10%;
           animation-delay: 1s;
         }
-
         .coin-3 {
           bottom: 30%;
           left: 8%;
           animation-delay: 2s;
         }
-
         .magnify {
           bottom: 50%;
           left: 15%;
           animation-delay: 1.2s;
         }
-
         .character-left {
           bottom: 5%;
           left: 10%;
           animation-delay: 0.8s;
         }
-
         .character-right {
           bottom: 10%;
           right: 5%;
           animation-delay: 1.8s;
         }
-
         .bot-character {
           bottom: 40%;
           left: 25%;
@@ -712,7 +846,6 @@ export default function LandingPageClient() {
           }
         }
 
-        /* Section Container */
         .section-container {
           max-width: 1200px;
           margin: 0 auto;
@@ -739,7 +872,7 @@ export default function LandingPageClient() {
           margin-right: auto;
         }
 
-        /* Features Section - NEW DESIGN */
+        /* Features */
         .features-section {
           min-height: 100vh;
           padding: 6rem 5%;
@@ -854,7 +987,110 @@ export default function LandingPageClient() {
           color: #ffffff;
         }
 
-        /* Security Section */
+        /* ── How It Works ── */
+        .how-it-works-section {
+          padding: 6rem 5%;
+          background: rgba(6, 10, 30, 0.9);
+          backdrop-filter: blur(20px);
+        }
+
+        .steps-container {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 0;
+          max-width: 1000px;
+          margin: 0 auto;
+        }
+
+        .step-card {
+          flex: 1;
+          max-width: 280px;
+          background: linear-gradient(
+            135deg,
+            rgba(102, 126, 234, 0.08) 0%,
+            rgba(118, 75, 162, 0.08) 100%
+          );
+          border: 1px solid rgba(102, 126, 234, 0.25);
+          border-radius: 20px;
+          padding: 2.5rem 2rem;
+          text-align: center;
+          position: relative;
+          transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .step-card:hover {
+          transform: translateY(-10px);
+          border-color: rgba(102, 126, 234, 0.6);
+          background: linear-gradient(
+            135deg,
+            rgba(102, 126, 234, 0.15) 0%,
+            rgba(118, 75, 162, 0.15) 100%
+          );
+          box-shadow: 0 20px 60px rgba(102, 126, 234, 0.25);
+        }
+
+        .step-number-badge {
+          position: absolute;
+          top: -16px;
+          left: 50%;
+          transform: translateX(-50%);
+          width: 32px;
+          height: 32px;
+          border-radius: 50%;
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          color: #ffffff;
+          font-family: "Orbitron", sans-serif;
+          font-size: 0.85rem;
+          font-weight: 700;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          box-shadow: 0 4px 16px rgba(102, 126, 234, 0.5);
+        }
+
+        .step-icon {
+          font-size: 3.5rem;
+          margin-bottom: 1.2rem;
+          display: inline-block;
+          transition: transform 0.4s ease;
+        }
+
+        .step-card:hover .step-icon {
+          transform: scale(1.1) rotate(5deg);
+        }
+
+        .step-title {
+          font-family: "Orbitron", sans-serif;
+          font-size: 1rem;
+          color: #ffffff;
+          font-weight: 700;
+          margin-bottom: 1rem;
+          letter-spacing: 0.5px;
+        }
+
+        .step-description {
+          color: rgba(255, 255, 255, 0.65);
+          font-size: 0.875rem;
+          line-height: 1.7;
+        }
+
+        .step-connector {
+          flex-shrink: 0;
+          width: 60px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 0 4px;
+        }
+
+        .connector-arrow {
+          width: 60px;
+          height: 24px;
+          opacity: 0.6;
+        }
+
+        /* Security */
         .security-section {
           min-height: 100vh;
           padding: 6rem 5%;
@@ -946,7 +1182,7 @@ export default function LandingPageClient() {
           background: rgba(10, 14, 39, 0.95);
         }
 
-        /* Responsive Design */
+        /* Responsive */
         @media (max-width: 1400px) {
           .feature-grid-new {
             grid-template-columns: repeat(2, 1fr);
@@ -960,17 +1196,25 @@ export default function LandingPageClient() {
             text-align: center;
             padding-top: 7rem;
           }
-
           .hero-title {
             font-size: 3.5rem;
           }
-
           .hero-visual {
             min-height: 500px;
           }
-
           .feature-grid-new {
             grid-template-columns: repeat(2, 1fr);
+          }
+          .steps-container {
+            flex-direction: column;
+            gap: 2.5rem;
+          }
+          .step-connector {
+            transform: rotate(90deg);
+          }
+          .step-card {
+            max-width: 100%;
+            width: 100%;
           }
         }
 
@@ -978,35 +1222,27 @@ export default function LandingPageClient() {
           .nav-links {
             display: none;
           }
-
           .nav-actions {
             position: static;
           }
-
           .hero-title {
             font-size: 2.5rem;
           }
-
           .hero-subtitle {
             font-size: 1.1rem;
           }
-
           .section-title {
             font-size: 2rem;
           }
-
           .feature-grid-new {
             grid-template-columns: 1fr;
           }
-
           .security-grid {
             grid-template-columns: 1fr;
           }
-
           .security-stats {
             grid-template-columns: repeat(2, 1fr);
           }
-
           .floating-element {
             font-size: 2rem;
           }
@@ -1016,21 +1252,17 @@ export default function LandingPageClient() {
           .navbar {
             padding: 1rem 5%;
           }
-
           .nav-actions {
             gap: 0.5rem;
           }
-
           .login-btn,
           .signup-btn {
             padding: 0.5rem 1rem;
             font-size: 0.9rem;
           }
-
           .hero-title {
             font-size: 2rem;
           }
-
           .section-title {
             font-size: 1.8rem;
           }
