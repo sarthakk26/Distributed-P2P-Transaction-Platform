@@ -6,7 +6,7 @@ services:
     container_name: cosmos-user-app
     restart: always
     ports:
-      -"3000:3000"
+      - "3000:3000"
     environment:
       - NODE_ENV=PRODUCTION
       - DATABASE_URL=${DATABASE_URL}
@@ -18,11 +18,11 @@ services:
       - bank-webhook
   
   bank-webhook:
-    image: sarth0x/cosmos-bank-wwebhook:latest
+    image: sarth0x/cosmos-bank-webhook:latest
     container_name: cosmos-bank-webhook
     restart: always
     ports:
-      -"3003:3003"
+      - "3003:3003"
     environment:
       - NODE_ENV=production
       - DATABASE_URL=${DATABASE_URL}
@@ -33,7 +33,7 @@ services:
     container_name: cosmos-bank-server
     restart: always
     ports:
-      -"8000:8000"
+      - "8000:8000"
     environment:
       - NODE_ENV=production
       - BANK_WEBHOOK_SECRET=${BANK_WEBHOOK_SECRET}
