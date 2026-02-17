@@ -10,8 +10,8 @@ COPY apps/bank-webhook apps/bank-webhook/
 # Install all dependencies
 RUN npm install
 
-# Build shared packages first
-RUN npm run build --workspace=packages/db
+# Generate Prisma client
+RUN npx prisma generate --schema=packages/db/prisma/schema.prisma
 
 # Bundle the webhook app (esbuild bundles everything including @repo/db)
 RUN npm run build --workspace=apps/bank-webhook
