@@ -5,6 +5,10 @@ const prismaClientSingleton = () => {
     log: process.env.NODE_ENV === 'development' 
       ? ['error', 'warn'] 
       : ['error'],
+    transactionOptions: {
+      timeout: 15000,
+      maxWait: 5000,
+    },
   })
 }
 
@@ -16,8 +20,5 @@ const prisma = globalThis.prismaGlobal ?? prismaClientSingleton()
 
 if (process.env.NODE_ENV !== 'production') globalThis.prismaGlobal = prisma
 
-// Export the singleton instance
 export { prisma }
-
-// Also export types if needed
 export * from './generated/client.js'

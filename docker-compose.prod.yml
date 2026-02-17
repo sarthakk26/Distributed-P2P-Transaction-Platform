@@ -1,4 +1,3 @@
-version: '3.8'
 
 services:
   user-app:
@@ -8,12 +7,14 @@ services:
     ports:
       - "3000:3000"
     environment:
-      - NODE_ENV=PRODUCTION
       - DATABASE_URL=${DATABASE_URL}
       - NEXTAUTH_URL=${NEXTAUTH_URL}
       - NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
       - JWT_SECRET=${JWT_SECRET}
       - RESEND_API_KEY=${RESEND_API_KEY}
+      - DUMMY_BANK_URL=${DUMMY_BANK_URL}
+      - PRISMA_QUERY_ENGINE_LIBRARY=/app/packages/db/src/generated/libquery_engine-linux-musl-openssl-3.0.x.so.node
+      - BANK_WEBHOOK_SECRET=${BANK_WEBHOOK_SECRET}
     depends_on:
       - bank-webhook
   
@@ -27,6 +28,7 @@ services:
       - NODE_ENV=production
       - DATABASE_URL=${DATABASE_URL}
       - BANK_WEBHOOK_SECRET=${BANK_WEBHOOK_SECRET}
+      - PRISMA_QUERY_ENGINE_LIBRARY=/app/packages/db/src/generated/libquery_engine-linux-musl-openssl-3.0.x.so.node
   
   bank-server:
     image: sarth0x/cosmos-bank-server:latest
