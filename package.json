@@ -1,5 +1,5 @@
 {
-  "name": "paytm",
+  "name": "wallet",
   "private": true,
   "scripts": {
     "build": "turbo run build",

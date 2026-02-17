@@ -1,0 +1,27 @@
+# ── Stage 1: builder 
+FROM node:20-alpine AS builder 
+WORKDIR /app
+
+# Copy root workspace files
+COPY package.json package-lock.json turbo.json ./
+COPY packages/ packages/
+COPY apps/bank-server/ apps/bank-server/
+
+# Install all dependencies
+RUN npm install
+
+# Bundle the bank server (esbuild bundles everything)
+RUN npm run build --workspace=apps/bank-server
+
+
+# ── Stage 2: runner 
+FROM node:20-alpine AS runner
+WORKDIR /app
+
+ENV NODE_ENV=production
+
+COPY --from=builder /app/apps/bank-server/dist/index.js ./index.js
+
+EXPOSE 8000
+
+CMD ["node", "index.js"]

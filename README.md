@@ -214,7 +214,7 @@ npx dotenv -e .env.test -- npx vitest run integration/p2p/p2p.test.ts
 # 3. Start bank-webhook service for on-ramp tests
 cd apps/bank-webhook
 BANK_WEBHOOK_SECRET=test-secret-do-not-use-in-prod \
-DATABASE_URL="postgresql://testuser:testpassword@localhost:5433/paytm_test" \
+DATABASE_URL="postgresql://testuser:testpassword@localhost:5433/wallet_test" \
 npx tsx src/index.ts
 
 # 4. Run on-ramp tests
