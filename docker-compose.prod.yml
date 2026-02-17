@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  user-app:
+    image: sarth0x/cosmos-user-app:latest
+    container_name: cosmos-user-app
+    restart: always
+    ports:
+      -"3000:3000"
+    environment:
+      - NODE_ENV=PRODUCTION
+      - DATABASE_URL=${DATABASE_URL}
+      - NEXTAUTH_URL=${NEXTAUTH_URL}
+      - NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
+      - JWT_SECRET=${JWT_SECRET}
+      - RESEND_API_KEY=${RESEND_API_KEY}
+    depends_on:
+      - bank-webhook
+  
+  bank-webhook:
+    image: sarth0x/cosmos-bank-wwebhook:latest
+    container_name: cosmos-bank-webhook
+    restart: always
+    ports:
+      -"3003:3003"
+    environment:
+      - NODE_ENV=production
+      - DATABASE_URL=${DATABASE_URL}
+      - BANK_WEBHOOK_SECRET=${BANK_WEBHOOK_SECRET}
+  
+  bank-server:
+    image: sarth0x/cosmos-bank-server:latest
+    container_name: cosmos-bank-server
+    restart: always
+    ports:
+      -"8000:8000"
+    environment:
+      - NODE_ENV=production
+      - BANK_WEBHOOK_SECRET=${BANK_WEBHOOK_SECRET}
+      - WEBHOOK_URL=${WEBHOOK_URL}

@@ -5,8 +5,7 @@
     "paths": {
       "@/*": ["./src/*"],
       "@repo/ui": ["../../packages/ui/src"],
-      "@repo/db": ["../../packages/db/src"],
-      "@repo/redis": ["../../packages/redis/src"]
+      "@repo/db": ["../../packages/db/src"]
     }
   },
   "include": [

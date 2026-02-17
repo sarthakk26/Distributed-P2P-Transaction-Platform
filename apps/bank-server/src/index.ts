@@ -8,7 +8,7 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-const WEBHOOK_URL = "http://localhost:3003/hdfcWebhook"; // Ensure this port matches your running User App
+const WEBHOOK_URL = process.env.WEBHOOK_URL || "http://localhost:3003/hdfcWebhook";
 const SECRET = process.env.BANK_WEBHOOK_SECRET || "fallback_secret"; // Ensure this matches user-app
 
 app.post("/bank/pay", async (req, res) => {

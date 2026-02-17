@@ -1,0 +1,30 @@
+# ── Stage 1: builder 
+FROM node:20-alpine AS builder
+WORKDIR /app
+
+# Copy root workspace files
+COPY package.json package-lock.json turbo.json ./
+COPY packages/ packages/
+COPY apps/bank-webhook apps/bank-webhook/
+
+# Install all dependencies
+RUN npm install
+
+# Build shared packages first
+RUN npm run build --workspace=packages/db
+
+# Bundle the webhook app (esbuild bundles everything including @repo/db)
+RUN npm run build --workspace=apps/bank-webhook
+
+# ── Stage 2: runner 
+FROM node:20-alpine AS runner
+WORKDIR /app
+
+ENV NODE_ENV=production
+
+# Only need the bundled output — esbuild inlines all dependencies
+COPY --from=builder /app/apps/bank-webhook/dist/index.js ./index.js
+
+EXPOSE 3003
+
+CMD ["node", "index.js"]
